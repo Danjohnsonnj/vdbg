@@ -313,6 +313,17 @@
       return (Math.floor(loops / 2));
     }
 
+    document.body.querySelector('#EmbedCode').addEventListener('click', function() {
+      event.target.setAttribute('data-old-value', event.target.value);
+      event.target.value = '';
+    });
+
+    document.body.querySelector('#EmbedCode').addEventListener('blur', function() {
+      if (event.target.value === '') {
+        event.target.value = event.target.getAttribute('data-old-value');
+      }
+    });
+
     document.body.querySelector('#ConfigPane form').addEventListener('submit', function() {
       event.preventDefault();
       var embedValue = event.target.querySelector('#EmbedCode').value;
