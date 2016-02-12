@@ -21,22 +21,65 @@
       font-size: 14px;
     }
 
-    #DebugPane {
+    #ConfigPane {
+      z-index: 2;
       position: fixed;
       bottom: 20px;
       right: 20px;
-      text-align: center;
+      text-align: left;
       padding: 10px;
       font-size: 12px;
       color: rgba(255, 255, 255, 0.8);
       background-color: rgba(0, 0, 0, 0.6);
+      opacity: 0.3;
+      height: calc(20px + 0.9em);
+      transform: translateX(calc(100% + 20px));
     }
 
-    #DebugPane:before {
-      content: 'Window dimensions';
+    #ConfigPane h6 {
+      cursor: pointer;
+      transform: translateX(calc(-100% - 40px));
+      font-size: inherit;
       display: block;
+      margin-top: 0;
+      line-height: 1em;
       border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
-      margin-bottom: 7px;
+      margin-bottom: 20px;
+    }
+
+    #ConfigPane:hover {
+      opacity: 0.6;
+    }
+
+    #ConfigPane.open {
+      height: auto;
+    }
+
+    #ConfigPane.open,
+    #ConfigPane.open h6 {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #ConfigPane form > * {
+      display: block;
+    }
+
+    #ConfigPane input {
+      margin-bottom: 20px;
+    }
+
+    #ConfigPane #EmbedCode {
+      width: 300px;
+    }
+
+    #ConfigPane #LimitLoops:not(:checked) ~ #MaxLoops,
+    #ConfigPane #LimitLoops:not(:checked) ~ label[for="MaxLoops"] {
+      display: none;
+    }
+
+    #ConfigPane #MaxLoops {
+      width: 20px;
     }
 
     code {
@@ -55,16 +98,225 @@
     li {
       margin: 10px 0 0;
     }
+
+    html {
+      background-color: #111111;
+    }
+
+    body {
+    }
+
+    .background-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .background-wrapper:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background-color: #000000;
+      opacity: 0.7;
+    }
+
+    .background-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
+    }
+
+    .ready {
+      opacity: 1;
+    }
+
     </style>
 
   </head>
 
-  <body>
+  <body class="">
 
-    <div id="DebugPane" class="debug-pane"></div>
+    <div class="background-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <div id="ConfigPane" class="debug-pane">
+      <h6>Configuration</h6>
+      <form>
+        <label for="EmbedCode">Embed Code: </label><input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/P5HyaCFr-Qs" frameborder="0" allowfullscreen></iframe>' />
+        <label for="LimitLoops">Limit Loops: </label><input id="LimitLoops" type="checkbox" value="limitloops" />
+        <label for="MaxLoops">Max Loops: </label><input id="MaxLoops" type="text" value="3" />
+        <input type="submit" value="go" />
+      </form>
+    </div>
   </body>
 
   <script type="text/javascript" defer>
+    // config stuff
+    var embedCode = '<iframe width="560" height="315" src="https://www.youtube.com/embed/9dxua41fAgo" frameborder="0" allowfullscreen></iframe>';
+    var scaleFactor = 1;
+    var fitMode = 'cover';
+    var maxLoops = null;
+
+    var player;
+    var loops = 0;
+
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady(videoId) {
+      if (!videoId) {
+        return false;
+      }
+
+      if (player) {
+        player.destroy();
+      }
+
+      player = new YT.Player('player', {
+        height: '315',
+        width: '560',
+        videoId: videoId,
+        playerVars: {
+          'autoplay': 1,
+          'controls': 0,
+          'autohide': 1,
+          'wmode': 'opaque',
+          'showinfo': 0,
+          'loop': 1,
+          'iv_load_policy': 3,
+          //'start': 15,
+          //'end': 110,
+          'playlist': videoId
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      var player = event.target;
+      player.f.classList.add('background-video');
+      scaleVideo(player);
+      player.mute();
+      player.playVideo();
+      document.body.classList.add('ready');
+      player.f.classList.add('ready');
+
+      window.addEventListener('resize', function() {
+        window.requestAnimationFrame(function() {
+          scaleVideo(player);
+        });
+      }, true);
+    }
+
+    var done = false;
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING && !done) {
+        // setTimeout(stopVideo, 6000);
+        // done = true;
+      }
+
+      if (maxLoops) {
+        if (event.data === YT.PlayerState.BUFFERING) {
+          var l = checkLoops();
+          console.log(l);
+          if (l >= maxLoops) {
+            stopVideo();
+          }
+        }
+      }
+    }
+
+    function stopVideo() {
+      player.stopVideo();
+    }
+
+    function scaleVideo(player) {
+      if (fitMode !== 'cover') {
+        return false;
+      }
+
+      var containerWidth = player.f.parentNode.clientWidth;
+      var containerHeight = player.f.parentNode.clientHeight;
+      var containerRatio = containerWidth / containerHeight;
+      var videoRatio = player.h.f.width / player.h.f.height;
+      if (containerRatio > videoRatio) {
+        // at the same width, the video is taller than the window
+        player.f.style.width = (containerWidth * scaleFactor) + 'px';
+        player.f.style.height = (containerWidth * scaleFactor) / videoRatio + 'px';
+      } else if (videoRatio > containerRatio) {
+        // at the same width, the video is shorter than the window
+        player.f.style.width = (containerHeight * scaleFactor) * videoRatio + 'px';
+        player.f.style.height = (containerHeight * scaleFactor) + 'px';
+      } else {
+        // the window and video ratios match
+        player.f.style.width = (containerWidth * scaleFactor) + 'px';
+        player.f.style.height = (containerHeight * scaleFactor) + 'px';
+      }
+    }
+
+    function getVideoUrl(value) {
+      var v;
+      if (value.indexOf('youtube.com/embed/') !== -1) {
+        // regex this?
+        v = value.substring(value.indexOf('/embed/') + 7);
+        v = v.substring(0, v.indexOf('"'));
+      } else if (value.indexOf('youtube.com/watch?v=') !== -1) {
+        v = value.substring(value.indexOf('watch?v=') + 8);
+      }
+
+      if (v.length > 0) {
+        return v;
+      } else {
+        return false;
+      }
+    }
+
+    function getMaxLoops() {
+      var enabled = event.target.querySelector('#LimitLoops').checked;
+      var num = event.target.querySelector('#MaxLoops').value;
+      if (!enabled || isNaN(num)) {
+        return null;
+      } else if (enabled && !isNaN(num)) {
+        return parseInt(num);
+      }
+    }
+    function checkLoops() {
+      loops++;
+      return (Math.floor(loops / 2));
+    }
+
+    document.body.querySelector('#ConfigPane form').addEventListener('submit', function() {
+      event.preventDefault();
+      var embedValue = event.target.querySelector('#EmbedCode').value;
+      var videoId = getVideoUrl(embedValue);
+      maxLoops = getMaxLoops();
+      onYouTubeIframeAPIReady(videoId);
+      event.target.parentNode.classList.remove('open');
+    }, true);
+
+    document.body.querySelector('#ConfigPane h6').addEventListener('click', function() {
+      event.target.parentNode.classList.toggle('open');
+    })
+
   </script>
 
 </html>
