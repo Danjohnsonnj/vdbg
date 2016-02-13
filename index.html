@@ -11,144 +11,7 @@
 
     <title>Video BG</title>
 
-    <style type="text/css">
-    * {
-      font-family: Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    #ConfigPane {
-      z-index: 2;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      text-align: left;
-      padding: 10px;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.8);
-      background-color: rgba(0, 0, 0, 0.6);
-      opacity: 0.3;
-      height: calc(20px + 0.9em);
-      transform: translateX(calc(100% + 20px));
-    }
-
-    #ConfigPane h6 {
-      cursor: pointer;
-      transform: translateX(calc(-100% - 40px));
-      font-size: inherit;
-      display: block;
-      margin-top: 0;
-      line-height: 1em;
-      border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
-      margin-bottom: 20px;
-    }
-
-    #ConfigPane:hover {
-      opacity: 0.6;
-    }
-
-    #ConfigPane.open {
-      height: auto;
-    }
-
-    #ConfigPane.open,
-    #ConfigPane.open h6 {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    #ConfigPane form label,
-    #ConfigPane form input:not([type="radio"]) {
-      display: block;
-    }
-
-    #ConfigPane form radiogroup input[type="radio"]:not(:first-of-type) {
-      margin-left: 20px;
-    }
-
-    #ConfigPane input {
-      margin-bottom: 20px;
-    }
-
-    #ConfigPane #EmbedCode {
-      width: 300px;
-    }
-
-    #ConfigPane #LimitLoops:not(:checked) ~ #MaxLoops,
-    #ConfigPane #LimitLoops:not(:checked) ~ label[for="MaxLoops"] {
-      display: none;
-    }
-
-    #ConfigPane #MaxLoops {
-      width: 20px;
-    }
-
-    code {
-      display: inline-block;
-      background: rgba(20, 20, 20, 0.2);
-      padding: 3px 5px;
-      font-family: Courier, serif;
-      line-height: 1em;
-      margin: 0 0 0.5em 0;
-    }
-
-    ul {
-      margin: 0 0 30px;
-    }
-
-    li {
-      margin: 10px 0 0;
-    }
-
-    html {
-      background-color: #111111;
-    }
-
-    body {
-    }
-
-    .background-wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .background-wrapper:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      background-color: #000000;
-      opacity: 0.7;
-    }
-
-    .background-video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.2s ease-in;
-    }
-
-    .ready {
-      opacity: 1;
-    }
-
-    </style>
+    <link rel="stylesheet" href="./style.css" />
 
   </head>
 
@@ -156,203 +19,56 @@
 
     <div class="background-wrapper">
       <div id="player"></div>
+      <div class="overlay"></div>
     </div>
 
     <div id="ConfigPane" class="config-pane">
       <h6>Configuration</h6>
       <form>
-        <label for="EmbedCode">YouTube Embed Code or URL: </label><input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/P5HyaCFr-Qs" frameborder="0" allowfullscreen></iframe>' />
-        <radiogroup><label for="FitMode">Fit Mode: </label><input name="FitMode" type="radio" value="cover" checked />Fill <input name="FitMode" type="radio" value="contain" />Fit </radiogroup>
-        <label for="LimitLoops">Limit Loops: </label><input id="LimitLoops" type="checkbox" value="limitloops" />
-        <label for="MaxLoops">Max Loops: </label><input id="MaxLoops" type="text" value="3" />
+        <label for="EmbedCode">YouTube Embed Code or URL: </label>
+        <input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/P5HyaCFr-Qs" frameborder="0" allowfullscreen></iframe>' />
+
+        <radiogroup>
+          <label for="FitMode">Fit Mode: </label>
+          <input name="FitMode" type="radio" value="cover" checked />Fill <input name="FitMode" type="radio" value="contain" />Fit
+        </radiogroup>
+        <label for="LimitLoops">Limit Loops: </label>
+        <input id="LimitLoops" type="checkbox" value="limitloops" />
+
+        <label for="MaxLoops">Max Loops: </label>
+        <input id="MaxLoops" type="text" value="3" />
+
+        <hr />
+
+        <label for="OverlayColor">Overlay Color</label>
+        #<input id="OverlayColor" type="text" value="000000" maxLength="6" />
+
+        <label for="OverlayOpacity">Overlay Opacity</label>
+        <input id="OverlayOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="Filter">Filter effect: </label>
+        <select id="Filter">
+          <option value="none" selected>none</option>
+          <option value="blur">blur</option>
+          <option value="brightness">brightness</option>
+          <option value="contrast">contrast</option>
+          <option value="drop-shadow">drop shadow</option>
+          <option value="grayscale">grayscale</option>
+          <option value="hue-rotate">hue rotate</option>
+          <option value="invert">invert</option>
+          <option value="opacity">opacity</option>
+          <option value="saturate">saturate</option>
+          <option value="sepia">sepia</option>
+        </select>
+
+        <label for="FilterStrength" class="hidden">Filter Strength</label>
+        <input id="FilterStrength" type="range" min="0" max="100" step="1" />
+
         <input type="submit" value="go" />
       </form>
     </div>
   </body>
 
-  <script type="text/javascript" defer>
-    /*
-    * CONFIG, to be wired to app UI
-    */
-    var embedCode = '<iframe width="560" height="315" src="https://www.youtube.com/embed/9dxua41fAgo" frameborder="0" allowfullscreen></iframe>';
-    var scaleFactor = 1;
-    var fitMode = 'cover';
-    var maxLoops = null;
-    var videoId = null;
-
-
-    /*
-     * MEAT AND POTATOES (unless you're not eating carbs; then it's just meat)
-     */
-    var player;
-    var loops = 0;
-
-    var tag = document.createElement('script');
-    tag.src = '//www.youtube.com/iframe_api';
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    function onYouTubeIframeAPIReady() {
-      if (!videoId) {
-        return false;
-      }
-
-      if (player) {
-        try {
-          player.destroy();
-        } catch(e) {
-          // nothing to destroy
-        }
-      }
-
-      player = new YT.Player('player', {
-        height: '315',
-        width: '560',
-        videoId: videoId,
-        playerVars: {
-          'autoplay': 1,
-          'controls': 0,
-          'autohide': 1,
-          'wmode': 'opaque',
-          'showinfo': 0,
-          'loop': 1,
-          'iv_load_policy': 3,
-          //'start': 15,
-          //'end': 110,
-          'playlist': videoId
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      var player = event.target;
-      player.f.classList.add('background-video');
-      scaleVideo(player);
-      player.mute();
-      player.playVideo();
-      document.body.classList.add('ready');
-      player.f.classList.add('ready');
-
-      window.addEventListener('resize', function() {
-        window.requestAnimationFrame(function() {
-          scaleVideo(player);
-        });
-      }, true);
-    }
-
-    var done = false;
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING && !done) {
-        // setTimeout(stopVideo, 6000);
-        // done = true;
-      }
-
-      if (maxLoops) {
-        if (event.data === YT.PlayerState.BUFFERING) {
-          var l = checkLoops();
-          console.log(l);
-          if (l >= maxLoops) {
-            stopVideo();
-          }
-        }
-      }
-    }
-
-    function stopVideo() {
-      player.stopVideo();
-    }
-
-    function scaleVideo(player) {
-      if (fitMode !== 'cover') {
-        player.f.style.width = '';
-        player.f.style.height = '';
-        return false;
-      }
-
-      var containerWidth = player.f.parentNode.clientWidth;
-      var containerHeight = player.f.parentNode.clientHeight;
-      var containerRatio = containerWidth / containerHeight;
-      var videoRatio = player.h.f.width / player.h.f.height;
-      if (containerRatio > videoRatio) {
-        // at the same width, the video is taller than the window
-        player.f.style.width = (containerWidth * scaleFactor) + 'px';
-        player.f.style.height = (containerWidth * scaleFactor) / videoRatio + 'px';
-      } else if (videoRatio > containerRatio) {
-        // at the same width, the video is shorter than the window
-        player.f.style.width = (containerHeight * scaleFactor) * videoRatio + 'px';
-        player.f.style.height = (containerHeight * scaleFactor) + 'px';
-      } else {
-        // the window and video ratios match
-        player.f.style.width = (containerWidth * scaleFactor) + 'px';
-        player.f.style.height = (containerHeight * scaleFactor) + 'px';
-      }
-    }
-
-    function getVideoUrl(value) {
-      var v;
-      if (value.indexOf('youtube.com/embed/') !== -1) {
-        // regex this?
-        v = value.substring(value.indexOf('/embed/') + 7);
-        v = v.substring(0, v.indexOf('"'));
-      } else if (value.indexOf('youtube.com/watch?v=') !== -1) {
-        v = value.substring(value.indexOf('watch?v=') + 8);
-      }
-
-      if (v.length > 0) {
-        return v;
-      } else {
-        return false;
-      }
-    }
-
-    function getMaxLoops() {
-      var enabled = event.target.querySelector('#LimitLoops').checked;
-      var num = event.target.querySelector('#MaxLoops').value;
-      if (!enabled || isNaN(num)) {
-        return null;
-      } else if (enabled && !isNaN(num)) {
-        return parseInt(num);
-      }
-    }
-
-    function checkLoops() {
-      loops++;
-      return (Math.floor(loops / 2));
-    }
-
-
-    /*
-     * LISTENERS
-     */
-    document.body.querySelector('#EmbedCode').addEventListener('click', function() {
-      event.target.setAttribute('data-old-value', event.target.value);
-      event.target.value = '';
-    });
-
-    document.body.querySelector('#EmbedCode').addEventListener('blur', function() {
-      if (event.target.value === '') {
-        event.target.value = event.target.getAttribute('data-old-value');
-      }
-    });
-
-    document.body.querySelector('#ConfigPane form').addEventListener('submit', function() {
-      event.preventDefault();
-      var embedValue = event.target.querySelector('#EmbedCode').value;
-      videoId = getVideoUrl(embedValue);
-      maxLoops = getMaxLoops();
-      fitMode = event.target.querySelector('radiogroup input:checked').value;
-      onYouTubeIframeAPIReady();
-      event.target.parentNode.classList.remove('open');
-    }, true);
-
-    document.body.querySelector('#ConfigPane h6').addEventListener('click', function() {
-      event.target.parentNode.classList.toggle('open');
-    })
-
-  </script>
+  <script type="text/javascript" src="./script.js" defer></script>
 
 </html>
