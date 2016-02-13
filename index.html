@@ -171,18 +171,24 @@
   </body>
 
   <script type="text/javascript" defer>
-    // config stuff
+    /*
+    * CONFIG, to be wired to app UI
+    */
     var embedCode = '<iframe width="560" height="315" src="https://www.youtube.com/embed/9dxua41fAgo" frameborder="0" allowfullscreen></iframe>';
     var scaleFactor = 1;
     var fitMode = 'cover';
     var maxLoops = null;
     var videoId = null;
 
+
+    /*
+     * MEAT AND POTATOES
+     */
     var player;
     var loops = 0;
 
     var tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
+    tag.src = '//www.youtube.com/iframe_api';
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -195,7 +201,7 @@
         try {
           player.destroy();
         } catch(e) {
-
+          // nothing to destroy
         }
       }
 
@@ -312,11 +318,16 @@
         return parseInt(num);
       }
     }
+
     function checkLoops() {
       loops++;
       return (Math.floor(loops / 2));
     }
 
+
+    /*
+     * LISTENERS
+     */
     document.body.querySelector('#EmbedCode').addEventListener('click', function() {
       event.target.setAttribute('data-old-value', event.target.value);
       event.target.value = '';
