@@ -14,7 +14,6 @@ var videoId = null;
  * MEAT AND POTATOES (unless you're not eating carbs; then it's just meat)
  */
 var player;
-var resizeTimer = null;
 var loops = 0;
 var isMobileSafari = (window.navigator.userAgent.indexOf('AppleWebKit') !== -1 && window.navigator.userAgent.indexOf('Mobile') !== -1);
 
@@ -314,12 +313,7 @@ document.body.querySelector('.background-wrapper').addEventListener('click', fun
 });
 
 window.addEventListener('resize', function() {
-  if (resizeTimer !== null) {
-    window.clearTimeout(resizeTimer);
-  }
-  resizeTimer = window.setTimeout(function() {
-    window.requestAnimationFrame(function() {
-      scaleVideo(player);
-    }, 10);
+  window.requestAnimationFrame(function() {
+    scaleVideo(player);
   });
 }, true);
