@@ -69,7 +69,7 @@ function onPlayerReady(event) {
   };
   scaleVideo(player);
   player.mute();
-  !!isMobileSafari && player.playVideo();
+  !isMobileSafari && player.playVideo();
   document.body.classList.add('ready');
   player.f.classList.add('ready');
 }
