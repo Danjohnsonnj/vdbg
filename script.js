@@ -70,18 +70,12 @@ function onPlayerReady(event) {
   player.f.classList.add('ready');
 }
 
-var done = false;
 function onPlayerStateChange(event) {
-  if (event.data === YT.PlayerState.PLAYING && !done) {
-    // setTimeout(stopVideo, 6000);
-    // done = true;
-  }
-
-  if (maxLoops) {
-    if (event.data === YT.PlayerState.BUFFERING) {
+  if (event.data === YT.PlayerState.PLAYING) {
+    if (maxLoops) {
       var l = checkLoops();
       console.log(l);
-      if (l >= maxLoops) {
+      if (l > maxLoops) {
         stopVideo();
       }
     }
@@ -237,8 +231,7 @@ function getOverlayOpacity() {
 
 function checkLoops() {
   loops++;
-  // YouTube's API state change event fires twice on a loop
-  return (Math.floor(loops / 2));
+  return loops;
 }
 
 function getOverlayBlend() {
