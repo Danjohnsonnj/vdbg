@@ -16,6 +16,7 @@ var videoId = null;
 var player;
 var resizeTimer = null;
 var loops = 0;
+var isMobileSafari = (window.navigator.userAgent.indexOf('AppleWebKit') !== -1 && window.navigator.userAgent.indexOf('Mobile') !== -1);
 
 var tag = document.createElement('script');
 var protocol = document.location.protocol;
@@ -63,9 +64,12 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(event) {
   var player = event.target;
   player.f.classList.add('background-video');
+  if (isMobileSafari) {
+    player.f.classList.add('mobile');
+  };
   scaleVideo(player);
   player.mute();
-  player.playVideo();
+  !!isMobileSafari && player.playVideo();
   document.body.classList.add('ready');
   player.f.classList.add('ready');
 }

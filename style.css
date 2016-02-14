@@ -148,10 +148,13 @@ body {
   left: 50%;
   min-width: 100%;
   min-height: 100%;
-  pointer-events: none;
   transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity 0.2s ease-in;
+}
+
+.background-video:not(.mobile) {
+  pointer-events: none;
 }
 
 .ready {
