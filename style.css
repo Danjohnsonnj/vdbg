@@ -19,7 +19,7 @@ body {
   background-color: rgba(0, 0, 0, 0.6);
   opacity: 0.3;
   transform: translateY(calc(100% - 0.9em - 10px));
-  transition: transform 0.3s ease-in-out;
+  transition: opacity 0.3s ease, transform 0.3s ease-in-out;
 }
 
 #ConfigPane h6 {
@@ -43,6 +43,7 @@ body {
 
 #ConfigPane:hover {
   opacity: 0.6;
+  transform: translateY(calc(100% - 0.9em - 20px));
 }
 
 #ConfigPane.open {
