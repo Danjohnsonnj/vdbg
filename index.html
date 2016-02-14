@@ -41,10 +41,32 @@
         <hr />
 
         <label for="OverlayColor">Overlay Color</label>
-        #<input id="OverlayColor" type="text" value="000000" maxLength="6" />
+        <span>#</span><input id="OverlayColor" type="text" value="000000" maxLength="6" />
 
         <label for="OverlayOpacity">Overlay Opacity</label>
         <input id="OverlayOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="OverlayBlendMode">Overlay blend mode: </label>
+        <select id="OverlayBlendMode">
+          <option value="none" selected>normal</option>
+          <option value="multiply">multiply</option>
+          <option value="screen">screen</option>
+          <option value="overlay">overlay</option>
+          <option value="darken">darken</option>
+          <option value="lighten">lighten</option>
+          <option value="color-dodge">color dodge</option>
+          <option value="color-burn">color burn</option>
+          <option value="hard-light">hard light</option>
+          <option value="soft-light">soft light</option>
+          <option value="difference">difference</option>
+          <option value="exclusion">exclusion</option>
+          <option value="hue">hue</option>
+          <option value="saturation">saturation</option>
+          <option value="color">color</option>
+          <option value="luminosity">luminosity</option>
+        </select>
+
+        <hr />
 
         <label for="Filter">Filter effect: </label>
         <select id="Filter">

@@ -150,12 +150,12 @@ function getMaxLoops() {
 
 function getFilter() {
   var filterValue = document.body.querySelector('#ConfigPane #Filter').value;
-  var filterStregnth = document.body.querySelector('#ConfigPane #FilterStrength');
-  var strengthValue = parseInt(filterStregnth.value);
+  var filterStrength = document.body.querySelector('#ConfigPane #FilterStrength');
+  var strengthValue = parseInt(filterStrength.value);
   if (filterValue === 'none' || filterValue === 'drop-shadow' || filterValue === 'invert') {
-    filterStregnth.previousElementSibling.classList.add('hidden');
+    filterStrength.previousElementSibling.classList.add('hidden');
   } else {
-    filterStregnth.previousElementSibling.classList.remove('hidden');
+    filterStrength.previousElementSibling.classList.remove('hidden');
   }
 
   if (typeof(player) === 'undefined') {
@@ -232,6 +232,17 @@ function checkLoops() {
   return (Math.floor(loops / 2));
 }
 
+function getOverlayBlend() {
+  var blendModeValue = document.body.querySelector('#ConfigPane #OverlayBlendMode').value;
+  var overlayEl = document.body.querySelector('.overlay');
+
+  if (blendModeValue === 'none') {
+    overlayEl.style.mixBlendMode = '';
+  } else {
+    overlayEl.style.mixBlendMode = blendModeValue;
+  }
+}
+
 
 /*
  * LISTENERS
@@ -257,6 +268,7 @@ document.body.querySelector('#ConfigPane form').addEventListener('submit', funct
   getFilter();
   getOverlayOpacity();
   getOverlayColor();
+  getOverlayBlend();
   event.target.parentNode.classList.remove('open');
 }, true);
 
@@ -278,4 +290,8 @@ document.body.querySelector('#ConfigPane #OverlayOpacity').addEventListener('cha
 
 document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur', function() {
   getOverlayColor();
+});
+
+document.body.querySelector('#ConfigPane #OverlayBlendMode').addEventListener('change', function() {
+  getOverlayBlend();
 });
