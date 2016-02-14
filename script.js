@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 * CONFIG, to be wired to app UI
 */
@@ -12,6 +14,7 @@ var videoId = null;
  * MEAT AND POTATOES (unless you're not eating carbs; then it's just meat)
  */
 var player;
+var resizeTimer = null;
 var loops = 0;
 
 var tag = document.createElement('script');
@@ -26,7 +29,7 @@ function onYouTubeIframeAPIReady() {
     return false;
   }
 
-  if (player) {
+  if (typeof(player) !== 'undefined') {
     try {
       player.destroy();
     } catch(e) {
@@ -65,12 +68,6 @@ function onPlayerReady(event) {
   player.playVideo();
   document.body.classList.add('ready');
   player.f.classList.add('ready');
-
-  window.addEventListener('resize', function() {
-    window.requestAnimationFrame(function() {
-      scaleVideo(player);
-    });
-  }, true);
 }
 
 var done = false;
@@ -156,71 +153,76 @@ function getMaxLoops() {
 
 function getFilter() {
   var filterValue = document.body.querySelector('#ConfigPane #Filter').value;
-  var filterStrength = document.body.querySelector('#ConfigPane #FilterStrength');
-  var strengthValue = parseInt(filterStrength.value);
+  var inputEl = document.body.querySelector('#ConfigPane #FilterStrength');
+  var strengthValue = parseInt(inputEl.value);
   if (filterValue === 'none' || filterValue === 'drop-shadow' || filterValue === 'invert') {
-    filterStrength.previousElementSibling.classList.add('hidden');
+    inputEl.previousElementSibling.classList.add('hidden');
   } else {
-    filterStrength.previousElementSibling.classList.remove('hidden');
+    inputEl.previousElementSibling.classList.remove('hidden');
   }
 
   if (typeof(player) === 'undefined') {
     return false;
   }
 
-  var p = player.f;
+  var p = player.f.style;
 
   switch (filterValue) {
     case 'blur': {
-      p.style.webkitFilter = 'blur(' + strengthValue / 5 + 'px)';
+      p.webkitFilter = 'blur(' + strengthValue / 5 + 'px)';
       break;
     }
     case 'brightness': {
-      p.style.webkitFilter = 'brightness(' + strengthValue / 5 + ')';
+      p.webkitFilter = 'brightness(' + strengthValue / 5 + ')';
       break;
     }
     case 'contrast': {
-      p.style.webkitFilter = 'contrast(' + strengthValue * 5 + '%)';
+      p.webkitFilter = 'contrast(' + strengthValue * 5 + '%)';
       break;
     }
     case 'drop-shadow': {
-      p.style.webkitFilter = 'drop-shadow(16px 16px 20px #000)';
+      p.webkitFilter = 'drop-shadow(16px 16px 20px #000)';
       break;
     }
     case 'grayscale': {
-      p.style.webkitFilter = 'grayscale(' + strengthValue + '%)';
+      p.webkitFilter = 'grayscale(' + strengthValue + '%)';
       break;
     }
     case 'hue-rotate': {
-      p.style.webkitFilter = 'hue-rotate(' + strengthValue / 100 * 360 + 'deg)';
+      p.webkitFilter = 'hue-rotate(' + strengthValue / 100 * 360 + 'deg)';
       break;
     }
     case 'invert': {
-      p.style.webkitFilter = 'invert()';
+      p.webkitFilter = 'invert()';
       break;
     }
     case 'opacity': {
-      p.style.webkitFilter = 'opacity(' + strengthValue + '%)';
+      p.webkitFilter = 'opacity(' + strengthValue + '%)';
       break;
     }
     case 'saturate': {
-      p.style.webkitFilter = 'saturate(' + strengthValue * 3 + '%)';
+      p.webkitFilter = 'saturate(' + strengthValue * 3 + '%)';
       break;
     }
     case 'sepia': {
-      p.style.webkitFilter = 'sepia(' + strengthValue + '%)';
+      p.webkitFilter = 'sepia(' + strengthValue + '%)';
       break;
     }
     default: {
-      p.style.webkitFilter = '';
+      p.webkitFilter = '';
     }
   }
 }
 
 function getOverlayColor() {
-  var overlayColor = ('#' + document.body.querySelector('#ConfigPane #OverlayColor').value).match(/^#[0-9a-f]{6}/i);
+  var colorValue = document.body.querySelector('#ConfigPane #OverlayColor').value;
+  var overlayColor = colorValue.match(/^#[0-9a-f]{6}/i);
   if (Array.isArray(overlayColor)) {
-    overlayColor = overlayColor[0];
+    overlayColor = '#' + overlayColor[0];
+  } else if (!!Array.prototype.some && colors.some(function(arrVal) {
+      return colorValue === arrVal;
+    })) {
+      overlayColor = colorValue;
   } else {
     overlayColor = '#000000';
     document.body.querySelector('#ConfigPane #OverlayColor').value = '000000';
@@ -235,6 +237,7 @@ function getOverlayOpacity() {
 
 function checkLoops() {
   loops++;
+  // YouTube's API state change event fires twice on a loop
   return (Math.floor(loops / 2));
 }
 
@@ -248,6 +251,10 @@ function getOverlayBlend() {
     overlayEl.style.mixBlendMode = blendModeValue;
   }
 }
+
+var colors = [
+  "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru", "pink", "plum", "powderblue", "purple", "rebeccapurple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen"
+];
 
 
 /*
@@ -304,3 +311,18 @@ document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur'
 document.body.querySelector('#ConfigPane #OverlayBlendMode').addEventListener('change', function() {
   getOverlayBlend();
 });
+
+document.body.querySelector('.background-wrapper').addEventListener('click', function() {
+  document.body.querySelector('#ConfigPane').classList.remove('open');
+});
+
+window.addEventListener('resize', function() {
+  if (resizeTimer !== null) {
+    window.clearTimeout(resizeTimer);
+  }
+  resizeTimer = window.setTimeout(function() {
+    window.requestAnimationFrame(function() {
+      scaleVideo(player);
+    }, 10);
+  });
+}, true);
