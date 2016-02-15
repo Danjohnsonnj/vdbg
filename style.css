@@ -75,8 +75,16 @@ body {
   margin-bottom: 10px;
 }
 
+#ConfigPane input[disabled="true"] {
+  opacity: 0.2;
+}
+
 #ConfigPane #EmbedCode {
   width: 300px;
+}
+
+#ConfigPane #OverlayColor {
+  margin-right: 10px;
 }
 
 #ConfigPane #LimitLoops:not(:checked) ~ #MaxLoops,

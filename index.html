@@ -38,10 +38,14 @@
         <label for="MaxLoops">Max Loops: </label>
         <input id="MaxLoops" type="text" value="3" />
 
+        <label for="Zoom">Zoom: </label>
+        <input id="Zoom" type="range" min="1" max="10" step="0.1" value="1" />
+
         <hr />
 
-        <label for="OverlayColor">Overlay Color</label>
-        <span>#</span><input id="OverlayColor" type="text" value="000000" />
+        <label for="OverlayColor">Overlay Color: </label>
+        <span>#</span><input id="OverlayColor" type="text" value="000000" maxLength="6" />
+        <span>or </span><select id="WebColors"></select>
 
         <label for="OverlayOpacity">Overlay Opacity</label>
         <input id="OverlayOpacity" type="range" min="0" max="100" step="1" value="50" />
