@@ -67,6 +67,7 @@ function onPlayerReady(event) {
     player.f.classList.add('mobile');
   };
   scaleVideo(player);
+  setSpeed();
   player.mute();
   !isMobileSafari && player.playVideo();
   document.body.classList.add('ready');
@@ -149,6 +150,13 @@ function getMaxLoops() {
   } else if (enabled && !isNaN(num)) {
     return parseInt(num);
   }
+}
+
+function setSpeed() {
+  if (!player) {
+    return false;
+  }
+  player.setPlaybackRate(document.body.querySelector('#ConfigPane #PlaybackSpeed input:checked').value);
 }
 
 function getFilter() {
@@ -268,7 +276,7 @@ function loopOnEnd() {
   var duration = player.getDuration();
   var current = player.getCurrentTime();
 
-  console.log(current / (duration - 0.25));
+  // console.log(current / (duration - 0.25));
 
   if (current / (duration - 0.1) >= 0.99) {
     player.seekTo(0);
@@ -297,6 +305,14 @@ document.body.querySelector('#EmbedCode').addEventListener('blur', function() {
   if (event.target.value === '') {
     event.target.value = event.target.getAttribute('data-old-value');
   }
+});
+
+document.body.querySelector('#ConfigPane #FitMode').addEventListener('change', function() {
+  scaleVideo(player);
+});
+
+document.body.querySelector('#ConfigPane #PlaybackSpeed').addEventListener('change', function() {
+  setSpeed();
 });
 
 document.body.querySelector('#ConfigPane form').addEventListener('submit', function() {
@@ -329,10 +345,6 @@ document.body.querySelector('#ConfigPane #Zoom').addEventListener('change', func
 
 document.body.querySelector('#ConfigPane #FilterStrength').addEventListener('change', function() {
   getFilter();
-});
-
-document.body.querySelector('#ConfigPane #FitMode').addEventListener('change', function() {
-  scaleVideo(player);
 });
 
 document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur', function() {
