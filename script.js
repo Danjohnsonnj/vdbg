@@ -225,12 +225,12 @@ function getOverlayColor() {
     input.removeAttribute('disabled');
     overlayColor = '#' + inputValue.match(/[0-9a-f]{6}/i);
   }
-  document.body.querySelector('.overlay').style.backgroundColor = overlayColor;
+  document.body.querySelector('.color').style.backgroundColor = overlayColor;
 }
 
 function getOverlayOpacity() {
   var opacityStrength = document.body.querySelector('#ConfigPane #OverlayOpacity').value / 100;
-  document.body.querySelector('.overlay').style.opacity = Math.min(0.95, opacityStrength);
+  document.body.querySelector('.color').style.opacity = Math.min(0.95, opacityStrength);
 }
 
 function checkLoops() {
@@ -240,12 +240,15 @@ function checkLoops() {
 
 function getOverlayBlend() {
   var blendModeValue = document.body.querySelector('#ConfigPane #OverlayBlendMode').value;
-  var overlayEl = document.body.querySelector('.overlay');
+  var overlayEl = document.body.querySelector('.color');
+  var patternEl = document.body.querySelector('.pattern');
 
   if (blendModeValue === 'none') {
     overlayEl.style.mixBlendMode = '';
+    patternEl.style.mixBlendMode = '';
   } else {
     overlayEl.style.mixBlendMode = blendModeValue;
+    patternEl.style.mixBlendMode = blendModeValue;
   }
 }
 
