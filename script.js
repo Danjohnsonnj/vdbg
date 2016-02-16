@@ -292,7 +292,7 @@ function loopOnEnd() {
 
   // console.log(current / (duration - 0.25));
 
-  if (current / (duration - 0.1) >= 0.99) {
+  if (current / (duration - 0.25) >= 0.99) {
     player.seekTo(0);
   }
 }
