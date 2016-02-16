@@ -12,7 +12,8 @@ var videoId = null;
 /*
  * MEAT AND POTATOES (unless you're not eating carbs; then it's just meat)
  */
-var player;
+var player = {};
+player.ready = false;
 var loops = 0;
 var isMobileSafari = (window.navigator.userAgent.indexOf('AppleWebKit') !== -1 && window.navigator.userAgent.indexOf('Mobile') !== -1);
 
@@ -46,7 +47,7 @@ function onYouTubeIframeAPIReady() {
       'autohide': 1,
       'wmode': 'opaque',
       'showinfo': 0,
-      'loop': 1,
+      'loop': 0,
       'iv_load_policy': 3,
       //'start': 15,
       //'end': 110,
@@ -70,22 +71,21 @@ function onPlayerReady(event) {
   !isMobileSafari && player.playVideo();
   document.body.classList.add('ready');
   player.f.classList.add('ready');
+  player.ready = true;
+  player.loopTimer = setInterval(loopOnEnd, 250);
 }
 
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
     if (maxLoops) {
       var l = checkLoops();
-      console.log(l);
       if (l > maxLoops) {
-        stopVideo();
+        player.pauseVideo();
+        clearInterval(player.loopTimer);
+        loops = 0;
       }
     }
   }
-}
-
-function stopVideo() {
-  player.stopVideo();
 }
 
 function scaleVideo(player) {
@@ -258,6 +258,21 @@ function checkLoops() {
 
 function getZoom() {
   return document.body.querySelector('#ConfigPane #Zoom').value;
+}
+
+function loopOnEnd() {
+  if (!player || !player.ready) {
+    return false;
+  }
+
+  var duration = player.getDuration();
+  var current = player.getCurrentTime();
+
+  console.log(current / (duration - 0.25));
+
+  if (current / (duration - 0.1) >= 0.99) {
+    player.seekTo(0);
+  }
 }
 
 var colors = {
