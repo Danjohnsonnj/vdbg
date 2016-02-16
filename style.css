@@ -139,6 +139,22 @@ body {
   overflow: hidden;
 }
 
+.sample-text {
+  width: 75%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 15vmin;
+  line-height: 0.9em;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
 .background-wrapper.flip-x {
   transform: rotateX(-180deg);
 }
