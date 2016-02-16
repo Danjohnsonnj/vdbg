@@ -57,7 +57,7 @@ body {
 }
 
 #ConfigPane form label,
-#ConfigPane form input:not([type="radio"]) {
+#ConfigPane form input:not([type="radio"]):not([type="checkbox"]) {
   display: block;
 }
 
@@ -139,8 +139,16 @@ body {
   overflow: hidden;
 }
 
-.background-wrapper {
+.background-wrapper.flip-x {
+  transform: rotateX(-180deg);
+}
 
+.background-wrapper.flip-y {
+  transform: rotateY(-180deg);
+}
+
+.background-wrapper.flip-x.flip-y {
+  transform: rotateX(-180deg) rotateY(-180deg);
 }
 
 .background-wrapper .pattern {
@@ -182,6 +190,7 @@ body {
   min-height: 100%;
   opacity: 0;
   transition: opacity 0.2s ease-in;
+  z-index: -1;
 }
 
 .background-video:not(.mobile) {

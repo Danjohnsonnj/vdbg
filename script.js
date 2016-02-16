@@ -28,8 +28,9 @@ function setUpVideoWithConfig() {
   var embedValue = document.body.querySelector('#EmbedCode').value;
   videoId = getVideoUrl(embedValue);
   maxLoops = getMaxLoops();
-  onYouTubeIframeAPIReady();
-  getFilter();
+  [].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
+    setOrientation(i);
+  });
   getOverlayColor();
   getOverlayOpacity('color');
   getOverlayBlend('color');
@@ -82,6 +83,7 @@ function onPlayerReady(event) {
   };
   scaleVideo(player);
   setSpeed();
+  getFilter();
   player.mute();
   !isMobileSafari && player.playVideo();
   document.body.classList.add('ready');
@@ -157,8 +159,8 @@ function getVideoUrl(value) {
 }
 
 function getMaxLoops() {
-  var enabled = event.target.querySelector('#LimitLoops').checked;
-  var num = event.target.querySelector('#MaxLoops').value;
+  var enabled = document.body.querySelector('#ConfigPane #LimitLoops').checked;
+  var num = document.body.querySelector('#ConfigPane #MaxLoops').value;
   if (!enabled || isNaN(num)) {
     return null;
   } else if (enabled && !isNaN(num)) {
@@ -282,6 +284,10 @@ function getZoom() {
   return document.body.querySelector('#ConfigPane #Zoom').value;
 }
 
+function setOrientation(input) {
+  document.body.querySelector('.background-wrapper').classList.toggle(input.value, input.checked);
+}
+
 function loopOnEnd() {
   if (!player || !player.ready) {
     return false;
@@ -345,6 +351,12 @@ document.body.querySelector('#ConfigPane #Filter').addEventListener('change', fu
 
 document.body.querySelector('#ConfigPane #Zoom').addEventListener('change', function() {
   scaleVideo(player);
+});
+
+[].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
+  i.addEventListener('change', function() {
+    setOrientation(event.target);
+  });
 });
 
 document.body.querySelector('#ConfigPane #FilterStrength').addEventListener('change', function() {
