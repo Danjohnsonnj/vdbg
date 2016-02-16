@@ -20,14 +20,14 @@
     <div class="background-wrapper fullscreen">
       <div id="player"></div>
       <div class="color overlay fullscreen"></div>
-      <!-- <div class="pattern overlay fullscreen"></div> -->
+      <div class="pattern overlay fullscreen" data-pattern-name=""></div>
     </div>
 
     <div id="ConfigPane" class="config-pane open">
       <h6>Configuration</h6>
       <form>
         <label for="EmbedCode">YouTube Embed Code or URL: </label>
-        <input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/lccrSpCMHDQ" frameborder="0" allowfullscreen></iframe>' />
+        <input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/9kKyF_Yn6HQ" frameborder="0" allowfullscreen></iframe>' />
 
         <radiogroup id="FitMode">
           <label for="FitMode">Fit Mode: </label>
@@ -48,11 +48,44 @@
         <span>#</span><input id="OverlayColor" type="text" value="000000" maxLength="6" />
         <span>or </span><select id="WebColors"></select>
 
-        <label for="OverlayOpacity">Overlay Opacity</label>
-        <input id="OverlayOpacity" type="range" min="0" max="100" step="1" value="50" />
+        <label for="ColorOpacity">Overlay Opacity</label>
+        <input id="ColorOpacity" type="range" min="0" max="100" step="1" value="50" />
 
-        <label for="OverlayBlendMode">Overlay blend mode: </label>
-        <select id="OverlayBlendMode">
+        <label for="ColorBlendMode">Overlay Blend Mode: </label>
+        <select id="ColorBlendMode">
+          <option value="none" selected>normal</option>
+          <option value="multiply">multiply</option>
+          <option value="screen">screen</option>
+          <option value="overlay">overlay</option>
+          <option value="darken">darken</option>
+          <option value="lighten">lighten</option>
+          <option value="color-dodge">color dodge</option>
+          <option value="color-burn">color burn</option>
+          <option value="hard-light">hard light</option>
+          <option value="soft-light">soft light</option>
+          <option value="difference">difference</option>
+          <option value="exclusion">exclusion</option>
+          <option value="hue">hue</option>
+          <option value="saturation">saturation</option>
+          <option value="color">color</option>
+          <option value="luminosity">luminosity</option>
+        </select>
+
+        <hr />
+
+        <label for="PatternLibrary">Overlay Pattern: </label>
+        <select id="PatternLibrary">
+          <option value="none" selected>none</option>
+          <option value="static">Static</option>
+          <option value="simple-horizontal">Simple Horizontal</option>
+          <option value="subtle-dots">Subtle Dots</option>
+        </select>
+
+        <label for="PatternOpacity">Pattern Opacity</label>
+        <input id="PatternOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="PatternBlendMode">Pattern Blend Mode: </label>
+        <select id="PatternBlendMode">
           <option value="none" selected>normal</option>
           <option value="multiply">multiply</option>
           <option value="screen">screen</option>

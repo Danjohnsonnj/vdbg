@@ -3,7 +3,6 @@
 /*
 * CONFIG, to be wired to app UI
 */
-var embedCode = '<iframe width="560" height="315" src="https://www.youtube.com/embed/9dxua41fAgo" frameborder="0" allowfullscreen></iframe>';
 var scaleFactor = 1;
 var fitMode = 'cover';
 var maxLoops = null;
@@ -131,6 +130,8 @@ function getVideoUrl(value) {
     v = v.substring(0, v.indexOf('"'));
   } else if (value.indexOf('youtube.com/watch?v=') !== -1) {
     v = value.substring(value.indexOf('watch?v=') + 8);
+  } else if (value.indexOf('youtu.be/') !== -1) {
+    v = value.substring(value.indexOf('youtu.be/' + 9));
   }
 
   if (v.length > 0) {
@@ -228,28 +229,31 @@ function getOverlayColor() {
   document.body.querySelector('.color').style.backgroundColor = overlayColor;
 }
 
-function getOverlayOpacity() {
-  var opacityStrength = document.body.querySelector('#ConfigPane #OverlayOpacity').value / 100;
-  document.body.querySelector('.color').style.opacity = Math.min(0.95, opacityStrength);
+function getPattern() {
+  var input = document.body.querySelector('#ConfigPane #PatternLibrary');
+  var inputValue = input.value;
+  document.body.querySelector('.pattern').setAttribute('data-pattern-name', inputValue);
+}
+
+function getOverlayOpacity(overlayType) {
+  var opacityStrength = document.body.querySelector('#ConfigPane #' + overlayType.charAt(0).toUpperCase() + overlayType.slice(1) + 'Opacity').value / 100;
+  document.body.querySelector('.' + overlayType).style.opacity = Math.min(0.95, opacityStrength);
+}
+
+function getOverlayBlend(overlayType) {
+  var blendModeValue = document.body.querySelector('#ConfigPane #' + overlayType.charAt(0).toUpperCase() + overlayType.slice(1) + 'BlendMode').value;
+  var overlayEl = document.body.querySelector('.' + overlayType);
+
+  if (blendModeValue === 'none') {
+    overlayEl.style.mixBlendMode = '';
+  } else {
+    overlayEl.style.mixBlendMode = blendModeValue;
+  }
 }
 
 function checkLoops() {
   loops++;
   return loops;
-}
-
-function getOverlayBlend() {
-  var blendModeValue = document.body.querySelector('#ConfigPane #OverlayBlendMode').value;
-  var overlayEl = document.body.querySelector('.color');
-  var patternEl = document.body.querySelector('.pattern');
-
-  if (blendModeValue === 'none') {
-    overlayEl.style.mixBlendMode = '';
-    patternEl.style.mixBlendMode = '';
-  } else {
-    overlayEl.style.mixBlendMode = blendModeValue;
-    patternEl.style.mixBlendMode = blendModeValue;
-  }
 }
 
 function getZoom() {
@@ -287,9 +291,12 @@ document.body.querySelector('#ConfigPane form').addEventListener('submit', funct
   maxLoops = getMaxLoops();
   onYouTubeIframeAPIReady();
   getFilter();
-  getOverlayOpacity();
   getOverlayColor();
-  getOverlayBlend();
+  getOverlayOpacity('color');
+  getOverlayBlend('color');
+  getPattern();
+  getOverlayOpacity('pattern');
+  getOverlayBlend('pattern');
   event.target.parentNode.classList.remove('open');
 }, true);
 
@@ -313,10 +320,6 @@ document.body.querySelector('#ConfigPane #FitMode').addEventListener('change', f
   scaleVideo(player);
 });
 
-document.body.querySelector('#ConfigPane #OverlayOpacity').addEventListener('change', function() {
-  getOverlayOpacity();
-});
-
 document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur', function() {
   getOverlayColor();
 });
@@ -325,8 +328,24 @@ document.body.querySelector('#ConfigPane #WebColors').addEventListener('change',
   getOverlayColor();
 });
 
-document.body.querySelector('#ConfigPane #OverlayBlendMode').addEventListener('change', function() {
-  getOverlayBlend();
+document.body.querySelector('#ConfigPane #ColorOpacity').addEventListener('change', function() {
+  getOverlayOpacity('color');
+});
+
+document.body.querySelector('#ConfigPane #ColorBlendMode').addEventListener('change', function() {
+  getOverlayBlend('color');
+});
+
+document.body.querySelector('#ConfigPane #PatternLibrary').addEventListener('change', function() {
+  getPattern();
+});
+
+document.body.querySelector('#ConfigPane #PatternOpacity').addEventListener('change', function() {
+  getOverlayOpacity('pattern');
+});
+
+document.body.querySelector('#ConfigPane #PatternBlendMode').addEventListener('change', function() {
+  getOverlayBlend('pattern');
 });
 
 document.body.querySelector('.background-wrapper').addEventListener('click', function() {
