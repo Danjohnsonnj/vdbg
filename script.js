@@ -338,6 +338,7 @@ document.body.querySelector('#ConfigPane #PlaybackSpeed').addEventListener('chan
 document.body.querySelector('#ConfigPane form').addEventListener('submit', function() {
   event.preventDefault();
   setUpVideoWithConfig();
+  onYouTubeIframeAPIReady();
   event.target.parentNode.classList.remove('open');
 }, true);
 
