@@ -31,12 +31,14 @@ function setUpVideoWithConfig() {
   [].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
     setOrientation(i);
   });
-  getOverlayColor();
-  getOverlayOpacity('color');
-  getOverlayBlend('color');
+  getColor('#TextColor', '.sample-text', 'color');
+  getOpacity('#TextColorOpacity', '.sample-text');
+  getColor('#OverlayColor', '.color', 'background-color');
+  getOpacity('#ColorOpacity', '.overlay.color');
+  getBlend('#ColorBlendMode', '.overlay.color');
   getPattern();
-  getOverlayOpacity('pattern');
-  getOverlayBlend('pattern');
+  getOpacity('#PatternOpacity', '.overlay.pattern');
+  getBlend('#PatternBlendMode', '.overlay.pattern');
 }
 
 function onYouTubeIframeAPIReady() {
@@ -238,19 +240,19 @@ function getFilter() {
   }
 }
 
-function getOverlayColor() {
-  var overlayColor;
-  var input = document.body.querySelector('#ConfigPane #OverlayColor');
+function getColor(inputSel, targetSel, property) {
+  var colorValue;
+  var input = document.body.querySelector('#ConfigPane ' + inputSel);
   var inputValue = input.value;
-  var selectValue = document.body.querySelector('#ConfigPane #WebColors').value;
+  var selectValue = document.body.querySelector('#ConfigPane .webColors[data-for="' + inputSel + '"]').value;
   if (selectValue !== 'none') {
     input.setAttribute('disabled', 'true');
-    overlayColor = selectValue;
+    colorValue = selectValue;
   } else {
     input.removeAttribute('disabled');
-    overlayColor = '#' + inputValue.match(/[0-9a-f]{6}/i);
+    colorValue = '#' + inputValue.match(/[0-9a-f]{6}/i);
   }
-  document.body.querySelector('.color').style.backgroundColor = overlayColor;
+  document.body.querySelector(targetSel).style[property] = colorValue ;
 }
 
 function getPattern() {
@@ -259,19 +261,19 @@ function getPattern() {
   document.body.querySelector('.pattern').setAttribute('data-pattern-name', inputValue);
 }
 
-function getOverlayOpacity(overlayType) {
-  var opacityStrength = document.body.querySelector('#ConfigPane #' + overlayType.charAt(0).toUpperCase() + overlayType.slice(1) + 'Opacity').value / 100;
-  document.body.querySelector('.' + overlayType).style.opacity = Math.min(0.95, opacityStrength);
+function getOpacity(inputSel, targetSel) {
+  var opacityStrength = document.body.querySelector('#ConfigPane ' + inputSel).value / 100;
+  document.body.querySelector(targetSel).style.opacity = Math.min(0.95, opacityStrength);
 }
 
-function getOverlayBlend(overlayType) {
-  var blendModeValue = document.body.querySelector('#ConfigPane #' + overlayType.charAt(0).toUpperCase() + overlayType.slice(1) + 'BlendMode').value;
-  var overlayEl = document.body.querySelector('.' + overlayType);
+function getBlend(inputSel, targetSel) {
+  var blendModeValue = document.body.querySelector('#ConfigPane ' + inputSel).value;
+  var el = document.body.querySelector(targetSel);
 
   if (blendModeValue === 'none') {
-    overlayEl.style.mixBlendMode = '';
+    el.style.mixBlendMode = '';
   } else {
-    overlayEl.style.mixBlendMode = blendModeValue;
+    el.style.mixBlendMode = blendModeValue;
   }
 }
 
@@ -311,7 +313,9 @@ var options = '<option value="none">none</option>';
 Object.keys(colors).forEach(function(a) {
   options += '<option value="' + a + '">' + a + '</option>';
 });
-document.getElementById('WebColors').innerHTML = options  ;
+[].slice.call(document.body.querySelectorAll('.webColors')).forEach(function(s) {
+  s.innerHTML = options;
+});
 
 /*
  * LISTENERS
@@ -364,20 +368,36 @@ document.body.querySelector('#ConfigPane #FilterStrength').addEventListener('cha
   getFilter();
 });
 
-document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur', function() {
-  getOverlayColor();
+document.body.querySelector('#ConfigPane #TextColor').addEventListener('blur', function() {
+  getColor('#TextColor', '.sample-text', 'color');
 });
 
-document.body.querySelector('#ConfigPane #WebColors').addEventListener('change', function() {
-  getOverlayColor();
+document.body.querySelector('#ConfigPane .webColors[data-for="#TextColor"]').addEventListener('change', function() {
+  getColor('#TextColor', '.sample-text', 'color');
+});
+
+document.body.querySelector('#ConfigPane #TextColorBlendMode').addEventListener('change', function() {
+  getBlend('#TextColorBlendMode', '.sample-text');
+});
+
+document.body.querySelector('#ConfigPane #PatternBlendMode').addEventListener('change', function() {
+  getBlend('#PatternBlendMode', '.overlay.pattern');
+});
+
+document.body.querySelector('#ConfigPane #OverlayColor').addEventListener('blur', function() {
+  getColor('#OverlayColor', '.color', 'background-color');
+});
+
+document.body.querySelector('#ConfigPane .webColors[data-for="#OverlayColor"]').addEventListener('change', function() {
+  getColor('#OverlayColor', '.color', 'background-color');
 });
 
 document.body.querySelector('#ConfigPane #ColorOpacity').addEventListener('change', function() {
-  getOverlayOpacity('color');
+  getOpacity('#ColorOpacity', '.overlay.color');
 });
 
 document.body.querySelector('#ConfigPane #ColorBlendMode').addEventListener('change', function() {
-  getOverlayBlend('color');
+  getBlend('#ColorBlendMode', '.overlay.color');
 });
 
 document.body.querySelector('#ConfigPane #PatternLibrary').addEventListener('change', function() {
@@ -385,11 +405,11 @@ document.body.querySelector('#ConfigPane #PatternLibrary').addEventListener('cha
 });
 
 document.body.querySelector('#ConfigPane #PatternOpacity').addEventListener('change', function() {
-  getOverlayOpacity('pattern');
+  getOpacity('#PatternOpacity', '.overlay.pattern');
 });
 
 document.body.querySelector('#ConfigPane #PatternBlendMode').addEventListener('change', function() {
-  getOverlayBlend('pattern');
+  getBlend('#PatternBlendMode', '.overlay.pattern');
 });
 
 document.body.querySelector('.background-wrapper').addEventListener('click', function() {

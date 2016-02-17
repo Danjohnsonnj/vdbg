@@ -12,6 +12,9 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow: scroll;
   text-align: left;
   padding: 10px;
   font-size: 12px;
@@ -165,6 +168,11 @@ body {
 
 .background-wrapper.flip-x.flip-y {
   transform: rotateX(-180deg) rotateY(-180deg);
+}
+
+.background-wrapper.flip-x .overlay,
+.background-wrapper.flip-y {
+  transform: translateZ(0);
 }
 
 .background-wrapper .pattern {
