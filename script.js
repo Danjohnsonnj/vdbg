@@ -376,6 +376,10 @@ document.body.querySelector('#ConfigPane .webColors[data-for="#TextColor"]').add
   getColor('#TextColor', '.sample-text', 'color');
 });
 
+document.body.querySelector('#ConfigPane #TextColorOpacity').addEventListener('change', function() {
+  getOpacity('#TextColorOpacity', '.sample-text');
+});
+
 document.body.querySelector('#ConfigPane #TextColorBlendMode').addEventListener('change', function() {
   getBlend('#TextColorBlendMode', '.sample-text');
 });
