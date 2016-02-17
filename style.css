@@ -83,10 +83,11 @@ body {
 }
 
 #ConfigPane #EmbedCode {
-  width: 300px;
+  width: 90%;
 }
 
-#ConfigPane #OverlayColor {
+#ConfigPane #OverlayColor,
+#ConfigPane #TextColor {
   margin-right: 10px;
 }
 
@@ -101,7 +102,9 @@ body {
 }
 
 #ConfigPane label[for="OverlayColor"] + span,
-#ConfigPane #OverlayColor {
+#ConfigPane #OverlayColor,
+#ConfigPane label[for="TextColor"] + span,
+#ConfigPane #TextColor {
   float: left;
 }
 
