@@ -66,8 +66,6 @@ function onYouTubeIframeAPIReady() {
       'showinfo': 0,
       'loop': 0,
       'iv_load_policy': 3,
-      //'start': 15,
-      //'end': 110,
       'playlist': videoId
     },
     events: {
