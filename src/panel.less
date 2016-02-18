@@ -1,0 +1,104 @@
+#ConfigPane {
+  z-index: 99;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow: scroll;
+  text-align: left;
+  padding: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0.3;
+  transform: translateY(~'calc(100% - 0.9em - 10px)');
+  transition: opacity 0.3s ease, transform 0.3s ease-in-out;
+
+  &:hover {
+    opacity: 0.6;
+    transform: translateY(~'calc(100% - 0.9em - 20px)');
+  }
+
+  &.open {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  h6 {
+    cursor: pointer;
+    font-size: inherit;
+    display: block;
+    margin-top: 0;
+    padding: 0.4em 0.5em;
+    line-height: 1em;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+  }
+
+  hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 10px;
+  }
+
+  label,
+  input:not([type="radio"]):not([type="checkbox"]) {
+    display: block;
+  }
+
+  radiogroup input[type="radio"]:not(:first-of-type) {
+    margin-left: 20px;
+  }
+
+  input,
+  select {
+    margin-bottom: 10px;
+  }
+
+  label {
+    clear: both;
+    margin-bottom: 5px;
+  }
+
+  input[disabled="true"] {
+    opacity: 0.2;
+  }
+
+  #EmbedCode {
+    width: 90%;
+  }
+
+  #OverlayColor,
+  #TextColor {
+    margin-right: 10px;
+  }
+
+  #LimitLoops:not(:checked) {
+
+    ~ #MaxLoops,
+    ~ label[for="MaxLoops"] {
+      display: none;
+    }
+  }
+
+  label[for="FilterStrength"].hidden {
+    &,
+    + #FilterStrength {
+      display: none;
+    }
+  }
+
+  label[for="OverlayColor"] + span,
+  #OverlayColor,
+  label[for="TextColor"] + span,
+  #TextColor {
+    float: left;
+  }
+
+  #MaxLoops {
+    width: 20px;
+  }
+}

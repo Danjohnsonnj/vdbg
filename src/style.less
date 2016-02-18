@@ -1,0 +1,99 @@
+
+.fullscreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sample-text {
+  width: 75%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 15vmin;
+  line-height: 0.9em;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.background-wrapper {
+
+  &.flip-x {
+    transform: rotateX(-180deg);
+  }
+
+  &.flip-y {
+    transform: rotateY(-180deg);
+  }
+
+  &.flip-x.flip-y {
+    transform: rotateX(-180deg) rotateY(-180deg);
+  }
+
+  &.flip-x .overlay,
+  &.flip-y .overlay {
+    transform: translateZ(0);
+  }
+
+  .pattern {
+    background-repeat: repeat;
+    opacity: 0.5;
+
+    &[data-pattern-name="simple-horizontal"] {
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSI5Ij4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjkiIGZpbGw9IiNmMmYyZjIiPjwvcmVjdD4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIiIGZpbGw9IiNlN2U3ZTciPjwvcmVjdD4KPHJlY3QgeT0iMiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjMiIGZpbGw9IiNlY2VjZWMiPjwvcmVjdD4KPC9zdmc+");
+    }
+
+    &[data-pattern-name="subtle-dots"] {
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiPjwvcmVjdD4KPC9zdmc+");
+    }
+
+    &[data-pattern-name="static"] {
+      background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCI+CjxmaWx0ZXIgaWQ9Im4iIHg9IjAiIHk9IjAiPgo8ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC43IiBudW1PY3RhdmVzPSIxMCIgc3RpdGNoVGlsZXM9InN0aXRjaCI+PC9mZVR1cmJ1bGVuY2U+CjwvZmlsdGVyPgo8cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzAwMCI+PC9yZWN0Pgo8cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsdGVyPSJ1cmwoI24pIiBvcGFjaXR5PSIwLjQiPjwvcmVjdD4KPC9zdmc+");
+    }
+  }
+
+  .overlay {
+    z-index: 2;
+  }
+
+  .color {
+    background-color: #000000;
+    opacity: 0.7;
+  }
+}
+
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+  z-index: 0;
+
+  body:not(.mobile) & {
+    pointer-events: none;
+  }
+}
+
+.mobile {
+
+  .overlay,
+  .sample-text {
+    pointer-events: none;
+  }
+}
+
+.ready {
+  opacity: 1;
+}

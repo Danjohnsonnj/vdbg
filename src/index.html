@@ -1,0 +1,179 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="description" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Video BG</title>
+
+    <link rel="stylesheet" href="./style.css" />
+
+  </head>
+
+  <body class="">
+
+    <div class="sample-text">A video background is dangerous design</div>
+
+    <div class="background-wrapper fullscreen">
+      <div id="player"></div>
+      <div class="color overlay fullscreen"></div>
+      <div class="pattern overlay fullscreen" data-pattern-name=""></div>
+    </div>
+
+    <div id="ConfigPane" class="config-pane open">
+      <h6>Configuration</h6>
+      <form>
+        <label for="EmbedCode">YouTube Embed Code or URL: </label>
+        <input id="EmbedCode" type="text" value='<iframe width="560" height="315" src="https://www.youtube.com/embed/dN6Zt3D3jT8" frameborder="0" allowfullscreen></iframe>' />
+
+        <radiogroup id="FitMode">
+          <label for="FitMode">Fit Mode: </label>
+          <input name="FitMode" type="radio" value="cover" checked />Cover <input name="FitMode" type="radio" value="contain" />Contain
+        </radiogroup>
+        <label for="LimitLoops">Limit Loops: </label>
+        <input id="LimitLoops" type="checkbox" value="limitloops" />
+
+        <label for="MaxLoops">Max Loops: </label>
+        <input id="MaxLoops" type="text" value="3" />
+
+        <label for="Zoom">Zoom: </label>
+        <input id="Zoom" type="range" min="1" max="10" step="0.1" value="1" />
+
+        <label>Flip: </label>
+        <input name="flip-checkbox" id="FlipX" value="flip-x" type="checkbox" />Top to bottom
+        <input name="flip-checkbox" id="FlipY" value="flip-y" type="checkbox" />Left to right
+
+        <radiogroup id="PlaybackSpeed">
+          <label for="PlaybackSpeed">Playback Speed: </label>
+          <input name="PlaybackSpeed" type="radio" value="0.25" />0.25
+          <input name="PlaybackSpeed" type="radio" value="0.5" />0.5
+          <input name="PlaybackSpeed" type="radio" value="1" checked />1
+          <input name="PlaybackSpeed" type="radio" value="1.25" />1.25
+          <input name="PlaybackSpeed" type="radio" value="1.5" />1.5
+          <input name="PlaybackSpeed" type="radio" value="2" />2
+        </radiogroup>
+
+        <hr />
+
+        <label for="TextColor">Text Color: </label>
+        <span>#</span><input id="TextColor" type="text" value="ffffff" maxLength="6" />
+        <span> or </span><select class="webColors" data-for="#TextColor"></select>
+
+        <label for="TextColorOpacity">Text Color Opacity</label>
+        <input id="TextColorOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="TextColorBlendMode">Text Color Blend Mode: </label>
+        <select id="TextColorBlendMode">
+          <option value="none" selected>normal</option>
+          <option value="multiply">multiply</option>
+          <option value="screen">screen</option>
+          <option value="overlay">overlay</option>
+          <option value="darken">darken</option>
+          <option value="lighten">lighten</option>
+          <option value="color-dodge">color dodge</option>
+          <option value="color-burn">color burn</option>
+          <option value="hard-light">hard light</option>
+          <option value="soft-light">soft light</option>
+          <option value="difference">difference</option>
+          <option value="exclusion">exclusion</option>
+          <option value="hue">hue</option>
+          <option value="saturation">saturation</option>
+          <option value="color">color</option>
+          <option value="luminosity">luminosity</option>
+        </select>
+
+        <hr />
+
+        <label for="OverlayColor">Overlay Color: </label>
+        <span>#</span><input id="OverlayColor" type="text" value="000000" maxLength="6" />
+        <span> or </span><select class="webColors" data-for="#OverlayColor"></select>
+
+        <label for="ColorOpacity">Overlay Opacity</label>
+        <input id="ColorOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="ColorBlendMode">Overlay Blend Mode: </label>
+        <select id="ColorBlendMode">
+          <option value="none" selected>normal</option>
+          <option value="multiply">multiply</option>
+          <option value="screen">screen</option>
+          <option value="overlay">overlay</option>
+          <option value="darken">darken</option>
+          <option value="lighten">lighten</option>
+          <option value="color-dodge">color dodge</option>
+          <option value="color-burn">color burn</option>
+          <option value="hard-light">hard light</option>
+          <option value="soft-light">soft light</option>
+          <option value="difference">difference</option>
+          <option value="exclusion">exclusion</option>
+          <option value="hue">hue</option>
+          <option value="saturation">saturation</option>
+          <option value="color">color</option>
+          <option value="luminosity">luminosity</option>
+        </select>
+
+        <hr />
+
+        <label for="PatternLibrary">Overlay Pattern: </label>
+        <select id="PatternLibrary">
+          <option value="none" selected>none</option>
+          <option value="static">Static</option>
+          <option value="simple-horizontal">Simple Horizontal</option>
+          <option value="subtle-dots">Subtle Dots</option>
+        </select>
+
+        <label for="PatternOpacity">Pattern Opacity</label>
+        <input id="PatternOpacity" type="range" min="0" max="100" step="1" value="50" />
+
+        <label for="PatternBlendMode">Pattern Blend Mode: </label>
+        <select id="PatternBlendMode">
+          <option value="none" selected>normal</option>
+          <option value="multiply">multiply</option>
+          <option value="screen">screen</option>
+          <option value="overlay">overlay</option>
+          <option value="darken">darken</option>
+          <option value="lighten">lighten</option>
+          <option value="color-dodge">color dodge</option>
+          <option value="color-burn">color burn</option>
+          <option value="hard-light">hard light</option>
+          <option value="soft-light">soft light</option>
+          <option value="difference">difference</option>
+          <option value="exclusion">exclusion</option>
+          <option value="hue">hue</option>
+          <option value="saturation">saturation</option>
+          <option value="color">color</option>
+          <option value="luminosity">luminosity</option>
+        </select>
+
+        <hr />
+
+        <label for="Filter">Filter effect: </label>
+        <select id="Filter">
+          <option value="none" selected>none</option>
+          <option value="blur">blur</option>
+          <option value="brightness">brightness</option>
+          <option value="contrast">contrast</option>
+          <option value="drop-shadow">drop shadow</option>
+          <option value="grayscale">grayscale</option>
+          <option value="hue-rotate">hue rotate</option>
+          <option value="invert">invert</option>
+          <option value="opacity">opacity</option>
+          <option value="saturate">saturate</option>
+          <option value="sepia">sepia</option>
+        </select>
+
+        <label for="FilterStrength" class="hidden">Filter Strength</label>
+        <input id="FilterStrength" type="range" min="0" max="100" step="1" />
+
+        <input type="submit" value="go" />
+      </form>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="./script.js" defer></script>
+
+</html>
