@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     browserify: {
       dev: {
         files: {
-          "build/script.js": ['src/script.js']
+          "build/script.js": ['src/videobackground.js', 'src/config-panel.js']
         },
         options: {
           watch: true,
@@ -15,7 +15,7 @@ module.exports = function(grunt) {
       },
       prod: {
         files: {
-          "build/script.js": ['src/script.js']
+          "build/script.js": ['src/videobackground.js', 'src/config-panel.js']
         },
         options: {
           transform: [['babelify', {presets: ["es2015"], sourceMapRelative: '.'}]]
