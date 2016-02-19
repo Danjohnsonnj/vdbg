@@ -3,7 +3,16 @@
   <head>
     <meta charset="utf-8">
     <script type="text/javascript" defer>
-    document.location.href = document.location.href.replace('index.html', 'build/index.html');
+    var location = document.location.href.toString();
+    if(location.indexOf('index.html') !== -1) {
+      document.location.href = location.replace('index.html', 'build/index.html');
+    } else {
+      if (location.lastIndexOf('/') === location.length - 1) {
+        document.location.href = location + 'build/';
+      } else {
+        document.location.href = location + '/build/';
+      }
+    }
     </script>
   </head>
 </html>
