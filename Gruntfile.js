@@ -74,7 +74,7 @@ module.exports = function(grunt) {
   grunt.registerTask('watchLess', ['less', 'watch:styles']);
   grunt.registerTask('watchMarkup', ['sync', 'watch:markup']);
   grunt.registerTask('dev', ['sync', 'less', 'browserify:dev']);
-  grunt.registerTask('prod', ['less', 'browserify:prod']);
+  grunt.registerTask('prod', ['less', 'sync', 'browserify:prod']);
 
 };
 

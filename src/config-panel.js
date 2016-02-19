@@ -3,6 +3,10 @@
 const VideoBackground = require('./videobackground.js');
 const vvv = new VideoBackground();
 
+if (document.location.protocol === 'file:') {
+  window.vvv = vvv;
+}
+
 /*
  * Some stuff related only to this config panel implementation
  */
