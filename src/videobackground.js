@@ -1,7 +1,7 @@
 'use strict';
 
 const DEFAULT_PROPERTY_VALUES = {
-  'container': document.querySelector('.background-wrapper'),
+  'container': '.background-wrapper',
   'videoId': '9kKyF_Yn6HQ',
   'fitMode': 'cover',
   'limitLoops': false,
@@ -12,7 +12,7 @@ const DEFAULT_PROPERTY_VALUES = {
   'textColor': '#ffffff',
   'textOpacity': 0.5,
   'textBlendMode': 'normal',
-  'overlayColor': '000000',
+  'overlayColor': '#000000',
   'overlayColorOpacity': 0.5,
   'overlayColorBlendMode': 'normal',
   'overlayPattern': 'none',
@@ -33,13 +33,16 @@ class VDBG {
   initializeProperties(props) {
     props = props || {};
     let _props = Object.assign({}, DEFAULT_PROPERTY_VALUES, props);
-    this.container = _props['container'];
+    this.container = document.querySelector(_props['container']);
     this.videoId = _props['videoId'];
     this.fitMode = _props['fitMode'];
     this.limitLoops = _props['limitLoops'];
     this.maxLoops = _props['maxLoops'];
     this.scaleFactor = _props['scaleFactor'];
     this.orientation = _props['orientation'];
+    if (typeof(this.orientation) === 'string') {
+      this.orientation = JSON.parse(this.orientation);
+    }
     this.speed = _props['speed'];
     this.textColor = _props['textColor'];
     this.textOpacity = _props['textOpacity'];
@@ -308,6 +311,30 @@ class VDBG {
       this.player.seekTo(0);
     }
   };
+
+  getProps() {
+    let p = {};
+    p.container = this.container;
+    p.videoId = this.videoId;
+    p.fitMode = this.fitMode;
+    p.limitLoops = this.limitLoops;
+    p.maxLoops = this.maxLoops;
+    p.scaleFactor = this.scaleFactor;
+    p.orientation = this.orientation;
+    p.speed = this.speed;
+    p.textColor = this.textColor;
+    p.textOpacity = this.textOpacity;
+    p.textBlendMode = this.textBlendMode;
+    p.overlayColor = this.overlayColor;
+    p.overlayColorOpacity = this.overlayColorOpacity;
+    p.overlayColorBlendMode = this.overlayColorBlendMode;
+    p.overlayPattern = this.overlayPattern;
+    p.overlayPatternOpacity = this.overlayPatternOpacity;
+    p.overlayPatternBlendMode = this.overlayPatternBlendMode;
+    p.filter = this.filter;
+    p.filterStrength = this.filterStrength;
+    return p;
+  }
 
   bindUI() {
     window.addEventListener('resize', function() {
