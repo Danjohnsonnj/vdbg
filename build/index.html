@@ -45,8 +45,8 @@
         <input id="Zoom" type="range" min="1" max="10" step="0.1" value="1" />
 
         <label>Flip: </label>
-        <input name="flip-checkbox" id="FlipX" value="flip-x" type="checkbox" />Top to bottom
-        <input name="flip-checkbox" id="FlipY" value="flip-y" type="checkbox" />Left to right
+        <input name="flip-checkbox" id="FlipX" value="x" type="checkbox" />Top to bottom
+        <input name="flip-checkbox" id="FlipY" value="y" type="checkbox" />Left to right
 
         <radiogroup id="PlaybackSpeed">
           <label for="PlaybackSpeed">Playback Speed: </label>
@@ -67,8 +67,8 @@
         <label for="TextColorOpacity">Text Color Opacity</label>
         <input id="TextColorOpacity" type="range" min="0" max="100" step="1" value="50" />
 
-        <label for="TextColorBlendMode">Text Color Blend Mode: </label>
-        <select id="TextColorBlendMode">
+        <label for="TextBlendMode">Text Color Blend Mode: </label>
+        <select id="TextBlendMode">
           <option value="none" selected>normal</option>
           <option value="multiply">multiply</option>
           <option value="screen">screen</option>
@@ -93,11 +93,11 @@
         <span>#</span><input id="OverlayColor" type="text" value="000000" maxLength="6" />
         <span> or </span><select class="webColors" data-for="#OverlayColor"></select>
 
-        <label for="ColorOpacity">Overlay Opacity</label>
-        <input id="ColorOpacity" type="range" min="0" max="100" step="1" value="50" />
+        <label for="OverlayColorOpacity">Overlay Opacity</label>
+        <input id="OverlayColorOpacity" type="range" min="0" max="100" step="1" value="50" />
 
-        <label for="ColorBlendMode">Overlay Blend Mode: </label>
-        <select id="ColorBlendMode">
+        <label for="OverlayColorBlendMode">Overlay Blend Mode: </label>
+        <select id="OverlayColorBlendMode">
           <option value="none" selected>normal</option>
           <option value="multiply">multiply</option>
           <option value="screen">screen</option>
@@ -126,8 +126,8 @@
           <option value="subtle-dots">Subtle Dots</option>
         </select>
 
-        <label for="PatternOpacity">Pattern Opacity</label>
-        <input id="PatternOpacity" type="range" min="0" max="100" step="1" value="50" />
+        <label for="OverlayPatternOpacity">Pattern Opacity</label>
+        <input id="OverlayPatternOpacity" type="range" min="0" max="100" step="1" value="50" />
 
         <label for="PatternBlendMode">Pattern Blend Mode: </label>
         <select id="PatternBlendMode">

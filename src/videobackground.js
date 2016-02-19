@@ -1,33 +1,57 @@
 'use strict';
 
+const DEFAULT_PROPERTY_VALUES = {
+  'container': document.querySelector('.background-wrapper'),
+  'videoId': '9kKyF_Yn6HQ',
+  'fitMode': 'cover',
+  'limitLoops': false,
+  'maxLoops': '',
+  'scaleFactor': 1,
+  'orientation': {'x': false, 'y': false},
+  'speed': 1,
+  'textColor': '#ffffff',
+  'textOpacity': 0.5,
+  'textBlendMode': 'normal',
+  'overlayColor': '000000',
+  'overlayColorOpacity': 0.5,
+  'overlayColorBlendMode': 'normal',
+  'overlayPattern': 'none',
+  'overlayPatternOpacity': 0.5,
+  'overlayPatternBlendMode': 'normal',
+  'filter': 'none',
+  'filterStrength': 50
+};
+
 class VDBG {
   constructor(props) {
     this.initializeProperties(props);
     this.initializeYouTube();
     this.setUpVideoWithConfig();
+    this.bindUI();
   };
 
   initializeProperties(props) {
     props = props || {};
-    this.container = props['container'] || document.querySelector('.background-wrapper');
-    this.videoId = props['videoId'] || '9kKyF_Yn6HQ';
-    this.fitMode = props['fitMode'] || 'cover';
-    this.limitLoops = props['limitLoops'] || false;
-    this.maxLoops = props['maxLoops'] || '';
-    this.scaleFactor = props['scaleFactor'] || 1;
-    this.orientation = props['orientation'] || '';
-    this.speed = props['speed'] || 1;
-    this.textColor = props['textColor'] || '#ffffff';
-    this.textOpacity = props['textOpacity'] || 0.5;
-    this.textBlendMode = props['textBlendMode'] || 'normal';
-    this.overlayColor = props['overlayColor'] || '000000';
-    this.overlayColorOpacity = props['overlayColorOpacity'] || 0.5;
-    this.overlayColorBlendMode = props['overlayColorBlendMode'] || 'normal';
-    this.overlayPattern = props['overlayPattern'] || 'none';
-    this.overlayPatternOpacity = props['overlayPatternOpacity'] || 0.5;
-    this.overlayPatternBlendMode = props['overlayPatternBlendMode'] || 'normal';
-    this.filter = props['filter'] || 'none';
-    this.filterStrength = props['filterStrength'] || 50;
+    let _props = Object.assign({}, DEFAULT_PROPERTY_VALUES, props);
+    this.container = _props['container'];
+    this.videoId = _props['videoId'];
+    this.fitMode = _props['fitMode'];
+    this.limitLoops = _props['limitLoops'];
+    this.maxLoops = _props['maxLoops'];
+    this.scaleFactor = _props['scaleFactor'];
+    this.orientation = _props['orientation'];
+    this.speed = _props['speed'];
+    this.textColor = _props['textColor'];
+    this.textOpacity = _props['textOpacity'];
+    this.textBlendMode = _props['textBlendMode'];
+    this.overlayColor = _props['overlayColor'];
+    this.overlayColorOpacity = _props['overlayColorOpacity'];
+    this.overlayColorBlendMode = _props['overlayColorBlendMode'];
+    this.overlayPattern = _props['overlayPattern'];
+    this.overlayPatternOpacity = _props['overlayPatternOpacity'];
+    this.overlayPatternBlendMode = _props['overlayPatternBlendMode'];
+    this.filter = _props['filter'];
+    this.filterStrength = _props['filterStrength'];
 
     this.player = {};
     this.currentLoop = 0;
@@ -77,8 +101,8 @@ class VDBG {
   };
 
   setOrientation() {
-    this.container.classList.toggle('flip-x', this.orientation.indexOf('x') !== -1);
-    this.container.classList.toggle('flip-y', this.orientation.indexOf('y') !== -1);
+    this.container.classList.toggle('flip-x', this.orientation.x);
+    this.container.classList.toggle('flip-y', this.orientation.y);
   };
 
   setColor(prop, targetSel, property) {
@@ -285,6 +309,13 @@ class VDBG {
     }
   };
 
+  bindUI() {
+    window.addEventListener('resize', function() {
+     window.requestAnimationFrame(function() {
+       this.scaleVideo();
+     }.bind(this));
+   }.bind(this), true);
+  }
 }
 
 module.exports = VDBG;

@@ -23,28 +23,23 @@ const vvv = new VideoBackground();
 /*
  * LISTENERS
  */
-
-window.addEventListener('resize', function() {
- window.requestAnimationFrame(function() {
-   vvv.scaleVideo();
- });
-}, true);
-
 panel.querySelector('h6').addEventListener('click', function() {
   event.target.parentNode.classList.toggle('open');
 });
 
-// panel.addEventListener('blur', function() {
-//   event.target.setAttribute('data-old-value', event.target.value);
-//   event.target.value = '';
-// });
-//
-// document.body.querySelector('#EmbedCode').addEventListener('blur', function() {
-//   if (event.target.value === '') {
-//     event.target.value = event.target.getAttribute('data-old-value');
-//   }
-// });
-//
+panel.querySelector('#EmbedCode').addEventListener('focus', function() {
+  event.target.setAttribute('data-old-value', event.target.value);
+  event.target.value = '';
+});
+
+panel.querySelector('#EmbedCode').addEventListener('blur', function() {
+  if (event.target.value === '') {
+    event.target.value = event.target.getAttribute('data-old-value');
+  } else {
+    vvv.videoId = vvv.getVideoUrl(event.target.value);
+    vvv.onYouTubeIframeAPIReady();
+  }
+});
 
 panel.querySelector('#FitMode').addEventListener('change', function() {
   vvv.fitMode = event.target.value;
@@ -68,6 +63,13 @@ panel.querySelector('#Zoom').addEventListener('change', function() {
   vvv.scaleVideo();
 });
 
+[].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
+  i.addEventListener('change', function() {
+    vvv.orientation[event.target.value] = event.target.checked;
+    vvv.setOrientation();
+  });
+});
+
 panel.querySelector('#PlaybackSpeed').addEventListener('change', function() {
   vvv.speed = parseFloat(event.target.value);
   vvv.setSpeed();
@@ -84,81 +86,69 @@ panel.querySelector('.webColors[data-for="#TextColor"]').addEventListener('chang
 });
 
 panel.querySelector('#TextColorOpacity').addEventListener('change', function() {
-  vvv.textOpacity = parseFloat(event.target.value);
+  vvv.textOpacity = parseFloat(event.target.value) / 100;
   vvv.setOpacity(vvv.textOpacity, '.sample-text');
 });
 
-panel.querySelector('#TextColorBlendMode').addEventListener('change', function() {
-  getBlend('#TextColorBlendMode', '.sample-text');
+panel.querySelector('#TextBlendMode').addEventListener('change', function() {
+  vvv.textBlendMode = event.target.value;
+  setBlend(vvv.textBlendMode, '.overlay.color');
 });
 
-//
-// panel.querySelector('form').addEventListener('submit', function() {
-//   event.preventDefault();
-//   setUpVideoWithConfig();
-//   onYouTubeIframeAPIReady();
-//   event.target.parentNode.classList.remove('open');
-// }, true);
-//
-//
-//
-// [].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
-//   i.addEventListener('change', function() {
-//     setOrientation(event.target);
-//   });
-// });
-//
-// panel.querySelector('#FilterStrength').addEventListener('change', function() {
-//   getFilter();
-// });
-//
-// panel.querySelector('#PatternBlendMode').addEventListener('change', function() {
-//   getBlend('#PatternBlendMode', '.overlay.pattern');
-// });
-//
-// panel.querySelector('#OverlayColor').addEventListener('blur', function() {
-//   getColor('#OverlayColor', '.color', 'background-color');
-// });
-//
-// panel.querySelector('.webColors[data-for="#OverlayColor"]').addEventListener('change', function() {
-//   getColor('#OverlayColor', '.color', 'background-color');
-// });
-//
-// panel.querySelector('#ColorOpacity').addEventListener('change', function() {
-//   getOpacity('#ColorOpacity', '.overlay.color');
-// });
-//
-// panel.querySelector('#ColorBlendMode').addEventListener('change', function() {
-//   getBlend('#ColorBlendMode', '.overlay.color');
-// });
-//
-// panel.querySelector('#PatternLibrary').addEventListener('change', function() {
-//   getPattern();
-// });
-//
-// panel.querySelector('#PatternOpacity').addEventListener('change', function() {
-//   getOpacity('#PatternOpacity', '.overlay.pattern');
-// });
-//
-// panel.querySelector('#PatternBlendMode').addEventListener('change', function() {
-//   getBlend('#PatternBlendMode', '.overlay.pattern');
-// });
-//
-// document.body.querySelector('.background-wrapper').addEventListener('click', function() {
-//   document.body.querySelector('#ConfigPane').classList.remove('open');
-// });
-//
+panel.querySelector('#OverlayColor').addEventListener('blur', function() {
+  vvv.overlayColor = '#' + event.target.value;
+  vvv.setColor(vvv.overlayColor, '.overlay.color', 'background-color');
+});
 
-// panel.querySelector('#Filter').addEventListener('change', function() {
-//   getFilter();
-// });
+panel.querySelector('.webColors[data-for="#OverlayColor"]').addEventListener('change', function() {
+  vvv.overlayColor = event.target.value
+  vvv.setColor(vvv.overlayColor, '.overlay.color', 'background-color');
+});
 
-//
-// window.addEventListener('load', function() {
-//   setUpVideoWithConfig();
-//   if (YT.loaded) {
-//     onYouTubeIframeAPIReady();
-//   } else {
-//     setTimeout(onYouTubeIframeAPIReady, 500);
-//   }
-// }, true);
+panel.querySelector('#OverlayColorOpacity').addEventListener('change', function() {
+  vvv.overlayColorOpacity = parseFloat(event.target.value) / 100;
+  vvv.setOpacity(vvv.overlayColorOpacity, '.overlay.color');
+});
+
+panel.querySelector('#OverlayColorBlendMode').addEventListener('change', function() {
+  vvv.overlayColorBlendMode = event.target.value;
+  vvv.setBlend(vvv.overlayColorBlendMode, '.overlay.color');
+});
+
+panel.querySelector('#PatternLibrary').addEventListener('change', function() {
+  vvv.overlayPattern = event.target.value;
+  vvv.setPattern();
+});
+
+panel.querySelector('#OverlayPatternOpacity').addEventListener('change', function() {
+  vvv.overlayPatternOpacity = parseFloat(event.target.value) / 100;
+  vvv.setOpacity(vvv.overlayPatternOpacity, '.overlay.pattern');
+});
+
+panel.querySelector('#PatternBlendMode').addEventListener('change', function() {
+  vvv.overlayPatternBlendMode = event.target.value;
+  vvv.setBlend(vvv.overlayPatternBlendMode, '.overlay.pattern');
+});
+
+panel.querySelector('#Filter').addEventListener('change', function() {
+  vvv.filter = event.target.value;
+  vvv.setFilter();
+
+  panel.querySelector('label[for="FilterStrength"]').classList.toggle('hidden', event.target.value === 'none')
+});
+
+panel.querySelector('#FilterStrength').addEventListener('change', function() {
+  vvv.filterStrength = parseFloat(event.target.value);
+  vvv.setFilter();
+});
+
+document.body.querySelector('.background-wrapper').addEventListener('click', function() {
+  panel.classList.remove('open');
+});
+
+panel.querySelector('form').addEventListener('submit', function() {
+  event.preventDefault();
+  vvv.setUpVideoWithConfig();
+  vvv.onYouTubeIframeAPIReady();
+  event.target.parentNode.classList.remove('open');
+}, true);
