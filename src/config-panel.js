@@ -96,7 +96,7 @@ panel.querySelector('#TextColorOpacity').addEventListener('change', function() {
 
 panel.querySelector('#TextBlendMode').addEventListener('change', function() {
   vvv.textBlendMode = event.target.value;
-  setBlend(vvv.textBlendMode, '.overlay.color');
+  vvv.setBlend(vvv.textBlendMode, '.overlay.color');
 });
 
 panel.querySelector('#OverlayColor').addEventListener('blur', function() {
