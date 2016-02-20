@@ -2,6 +2,7 @@
 
 const DEFAULT_PROPERTY_VALUES = {
   'container': '.background-wrapper',
+  'sampleText': 'is background video dangerous design?',
   'videoId': '9kKyF_Yn6HQ',
   'fitMode': 'cover',
   'limitLoops': false,
@@ -35,6 +36,7 @@ class VDBG {
     props = props || {};
     let _props = Object.assign({}, DEFAULT_PROPERTY_VALUES, props);
     this.container = document.querySelector(_props['container']);
+    this.sampleText = _props['sampleText'];
     this.videoId = _props['videoId'];
     this.fitMode = _props['fitMode'];
     this.limitLoops = _props['limitLoops'];
@@ -75,6 +77,7 @@ class VDBG {
   };
 
   setUpVideoWithConfig() {
+    this.setSampleText();
     this.setOrientation();
     this.setColor(this.textColor, '.sample-text', 'color');
     this.setOpacity(this.textOpacity, '.sample-text');
@@ -109,6 +112,10 @@ class VDBG {
   setOrientation() {
     this.container.classList.toggle('flip-x', this.orientation.x);
     this.container.classList.toggle('flip-y', this.orientation.y);
+  };
+
+  setSampleText() {
+    document.body.querySelector('.sample-text').textContent = this.sampleText;
   };
 
   setColor(prop, targetSel, property) {
@@ -327,6 +334,7 @@ class VDBG {
   getProps() {
     let p = {};
     p.container = this.container;
+    p.sampleText = this.sampleText;
     p.videoId = this.videoId;
     p.fitMode = this.fitMode;
     p.limitLoops = this.limitLoops;

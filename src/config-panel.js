@@ -205,3 +205,17 @@ panel.querySelector('form').addEventListener('submit', function() {
   setUrl();
   event.target.parentNode.classList.remove('open');
 }, true);
+
+document.body.querySelector('.sample-text').addEventListener('mousedown', (e) => {
+  const oldValue = e.currentTarget.textContent;
+  e.currentTarget.innerHTML = '<textarea class="textInput" data-old-value="' + oldValue + '">' + oldValue +'</textarea>';
+  e.currentTarget.querySelector('textarea').addEventListener('blur', (e) => {
+    // if (e.keyCode === 13) {
+      if (e.currentTarget.value === '') {
+        e.currentTarget.parentNode.innerHTML = e.currentTarget.getAttribute('data-old-value');
+      } else {
+        e.currentTarget.parentNode.innerHTML = e.currentTarget.value;
+      }
+    // }
+  });
+});
