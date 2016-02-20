@@ -10,8 +10,8 @@ function getUrlParameters() {
   var urlParameters = decodeURIComponent(document.location.hash.substring(1));
   if (urlParameters) {
     Object.assign(config, JSON.parse(urlParameters));
-    setPanelValues();
     console.log(config);
+    setPanelValues();
     return config;
   }
 }
@@ -27,6 +27,7 @@ function setPanelValues() {
   panel.querySelector('#FitMode').value = config.fitMode;
   panel.querySelector('#LimitLoops').value = config.limitLoops;
   panel.querySelector('#MaxLoops').value = config.maxLoops;
+  panel.querySelector('#EndTime').value = config.timeCode.end;
   panel.querySelector('#Zoom').value = config.scaleFactor;
   [].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function (i) {
     i.checked = config.orientation[i.value];
@@ -102,6 +103,10 @@ panel.querySelector('#MaxLoops').addEventListener('change', function () {
   vvv.limitLoops = event.target.checked;
   vvv.maxLoops = parseInt(panel.querySelector('#MaxLoops').value);
   vvv.onYouTubeIframeAPIReady();
+});
+
+panel.querySelector('#EndTime').addEventListener('change', function () {
+  vvv.timeCode.end = parseFloat(event.target.value);
 });
 
 panel.querySelector('#Zoom').addEventListener('change', function () {
@@ -226,7 +231,8 @@ var DEFAULT_PROPERTY_VALUES = {
   'overlayPatternOpacity': 0.5,
   'overlayPatternBlendMode': 'normal',
   'filter': 'none',
-  'filterStrength': 50
+  'filterStrength': 50,
+  'timeCode': { 'start': 0, 'end': null }
 };
 
 var VDBG = function () {
@@ -266,6 +272,7 @@ var VDBG = function () {
       this.overlayPatternBlendMode = _props['overlayPatternBlendMode'];
       this.filter = _props['filter'];
       this.filterStrength = _props['filterStrength'];
+      this.timeCode = _props['timeCode'];
 
       this.player = {};
       this.currentLoop = 0;
@@ -291,6 +298,7 @@ var VDBG = function () {
       this.setOrientation();
       this.setColor(this.textColor, '.sample-text', 'color');
       this.setOpacity(this.textOpacity, '.sample-text');
+      this.setBlend(this.textBlendMode, '.sample-text');
       this.setColor(this.overlayColor, '.overlay.color', 'background-color');
       this.setOpacity(this.overlayColorOpacity, '.overlay.color');
       this.setBlend(this.overlayColorBlendMode, '.overlay.color');
@@ -463,6 +471,8 @@ var VDBG = function () {
   }, {
     key: 'onPlayerReady',
     value: function onPlayerReady(event) {
+      var _this = this;
+
       this.player.f.classList.add('background-video');
       if (this.isMobileSafari) {
         body.classList.add('mobile');
@@ -472,10 +482,12 @@ var VDBG = function () {
       this.setFilter();
       this.player.mute();
       !this.isMobileSafari && this.player.playVideo();
-      document.body.classList.add('ready');
-      this.player.f.classList.add('ready');
+      setTimeout(function () {
+        document.body.classList.add('ready');
+        _this.player.f.classList.add('ready');
+      }, 500);
       this.player.ready = true;
-      this.player.loopTimer = setInterval(this.loopOnEnd, 250);
+      this.player.loopTimer = setTimeout(this.loopOnEnd.bind(this), 250);
     }
   }, {
     key: 'onPlayerStateChange',
@@ -539,17 +551,24 @@ var VDBG = function () {
   }, {
     key: 'loopOnEnd',
     value: function loopOnEnd() {
+      clearTimeout(this.loopTimer);
+      this.loopTimer = null;
       if (!this.player || !this.player.ready) {
         return false;
       }
 
       var duration = this.player.getDuration();
+      if (this.timeCode.end) {
+        duration = this.timeCode.end;
+      }
       var current = this.player.getCurrentTime();
+      //console.log(current);
 
       // todo: make the 0.25 offset a calculated value, or a variable
       if (current / (duration - 0.25) >= 0.99) {
-        this.player.seekTo(0);
+        this.player.seekTo(this.timeCode.start);
       }
+      this.loopTimer = setTimeout(this.loopOnEnd.bind(this), 250);
     }
   }, {
     key: 'getProps',
@@ -560,6 +579,7 @@ var VDBG = function () {
       p.fitMode = this.fitMode;
       p.limitLoops = this.limitLoops;
       p.maxLoops = this.maxLoops;
+      p.timeCode = this.timeCode;
       p.scaleFactor = this.scaleFactor;
       p.orientation = this.orientation;
       p.speed = this.speed;

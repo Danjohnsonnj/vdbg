@@ -9,8 +9,8 @@ function getUrlParameters() {
   let urlParameters = decodeURIComponent(document.location.hash.substring(1));
   if (urlParameters) {
     Object.assign(config, JSON.parse(urlParameters));
-    setPanelValues();
     console.log(config);
+    setPanelValues();
     return config;
   }
 }
@@ -26,6 +26,7 @@ function setPanelValues() {
   panel.querySelector('#FitMode').value = config.fitMode;
   panel.querySelector('#LimitLoops').value = config.limitLoops;
   panel.querySelector('#MaxLoops').value = config.maxLoops;
+  panel.querySelector('#EndTime').value = config.timeCode.end;
   panel.querySelector('#Zoom').value = config.scaleFactor;
   [].slice.call(document.body.querySelectorAll('input[name="flip-checkbox"]')).forEach(function(i) {
     i.checked = config.orientation[i.value];
@@ -103,6 +104,10 @@ panel.querySelector('#MaxLoops').addEventListener('change', function() {
   vvv.limitLoops = event.target.checked;
   vvv.maxLoops = parseInt(panel.querySelector('#MaxLoops').value);
   vvv.onYouTubeIframeAPIReady();
+});
+
+panel.querySelector('#EndTime').addEventListener('change', function() {
+  vvv.timeCode.end = parseFloat(event.target.value);
 });
 
 panel.querySelector('#Zoom').addEventListener('change', function() {

@@ -19,7 +19,8 @@ const DEFAULT_PROPERTY_VALUES = {
   'overlayPatternOpacity': 0.5,
   'overlayPatternBlendMode': 'normal',
   'filter': 'none',
-  'filterStrength': 50
+  'filterStrength': 50,
+  'timeCode': {'start': 0, 'end': null}
 };
 
 class VDBG {
@@ -55,6 +56,7 @@ class VDBG {
     this.overlayPatternBlendMode = _props['overlayPatternBlendMode'];
     this.filter = _props['filter'];
     this.filterStrength = _props['filterStrength'];
+    this.timeCode = _props['timeCode'];
 
     this.player = {};
     this.currentLoop = 0;
@@ -76,6 +78,7 @@ class VDBG {
     this.setOrientation();
     this.setColor(this.textColor, '.sample-text', 'color');
     this.setOpacity(this.textOpacity, '.sample-text');
+    this.setBlend(this.textBlendMode, '.sample-text');
     this.setColor(this.overlayColor, '.overlay.color', 'background-color');
     this.setOpacity(this.overlayColorOpacity, '.overlay.color');
     this.setBlend(this.overlayColorBlendMode, '.overlay.color');
@@ -237,10 +240,12 @@ class VDBG {
     this.setFilter();
     this.player.mute();
     !this.isMobileSafari && this.player.playVideo();
-    document.body.classList.add('ready');
-    this.player.f.classList.add('ready');
+    setTimeout(() => {
+      document.body.classList.add('ready');
+      this.player.f.classList.add('ready');
+    }, 500);
     this.player.ready = true;
-    this.player.loopTimer = setInterval(this.loopOnEnd, 250);
+    this.player.loopTimer = setTimeout(this.loopOnEnd.bind(this), 250);
   };
 
   onPlayerStateChange(event, context) {
@@ -299,17 +304,24 @@ class VDBG {
   };
 
   loopOnEnd() {
+    clearTimeout(this.loopTimer);
+    this.loopTimer = null;
     if (!this.player || !this.player.ready) {
       return false;
     }
 
-    const duration = this.player.getDuration();
+    let duration = this.player.getDuration();
+    if (this.timeCode.end) {
+      duration = this.timeCode.end;
+    }
     const current = this.player.getCurrentTime();
+    //console.log(current);
 
     // todo: make the 0.25 offset a calculated value, or a variable
     if (current / (duration - 0.25) >= 0.99) {
-      this.player.seekTo(0);
+      this.player.seekTo(this.timeCode.start);
     }
+    this.loopTimer = setTimeout(this.loopOnEnd.bind(this), 250);
   };
 
   getProps() {
@@ -319,6 +331,7 @@ class VDBG {
     p.fitMode = this.fitMode;
     p.limitLoops = this.limitLoops;
     p.maxLoops = this.maxLoops;
+    p.timeCode = this.timeCode;
     p.scaleFactor = this.scaleFactor;
     p.orientation = this.orientation;
     p.speed = this.speed;
