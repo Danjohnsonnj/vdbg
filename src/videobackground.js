@@ -319,7 +319,7 @@ class VDBG {
 
     let duration = this.player.getDuration();
     if (this.timeCode.end) {
-      duration = this.timeCode.end;
+      duration = Math.min(duration, this.timeCode.end);
     }
     const current = this.player.getCurrentTime();
     //console.log(current);

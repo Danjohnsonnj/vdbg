@@ -581,7 +581,7 @@ var VDBG = function () {
 
       var duration = this.player.getDuration();
       if (this.timeCode.end) {
-        duration = this.timeCode.end;
+        duration = Math.min(duration, this.timeCode.end);
       }
       var current = this.player.getCurrentTime();
       //console.log(current);
