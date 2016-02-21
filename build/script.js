@@ -209,13 +209,14 @@ document.body.querySelector('.sample-text').addEventListener('mousedown', functi
   var oldValue = e.currentTarget.textContent;
   e.currentTarget.innerHTML = '<textarea class="textInput" data-old-value="' + oldValue + '">' + oldValue + '</textarea>';
   e.currentTarget.querySelector('textarea').addEventListener('blur', function (e) {
-    // if (e.keyCode === 13) {
+    var sampleText = '';
     if (e.currentTarget.value === '') {
-      e.currentTarget.parentNode.innerHTML = e.currentTarget.getAttribute('data-old-value');
+      sampleText = e.currentTarget.getAttribute('data-old-value');
     } else {
-      e.currentTarget.parentNode.innerHTML = e.currentTarget.value;
+      sampleText = e.currentTarget.value;
     }
-    // }
+    vvv.sampleText = sampleText;
+    e.currentTarget.parentNode.innerHTML = sampleText;
   });
 });
 
