@@ -388,7 +388,7 @@ var VDBG = function () {
         return false;
       }
 
-      var pstyle = this.player.f.style;
+      var pstyle = this.player.getIframe().style;
 
       switch (this.filter) {
         case 'blur':
@@ -496,7 +496,7 @@ var VDBG = function () {
     value: function onPlayerReady(event) {
       var _this = this;
 
-      this.player.f.classList.add('background-video');
+      this.player.getIframe().classList.add('background-video');
       if (this.isMobileSafari) {
         body.classList.add('mobile');
       };
@@ -507,7 +507,7 @@ var VDBG = function () {
       !this.isMobileSafari && this.player.playVideo();
       setTimeout(function () {
         document.body.classList.add('ready');
-        _this.player.f.classList.add('ready');
+        _this.player.getIframe().classList.add('ready');
       }, 500);
       this.player.ready = true;
       this.player.loopTimer = setTimeout(this.loopOnEnd.bind(this), 250);
@@ -540,27 +540,27 @@ var VDBG = function () {
       }
 
       if (this.fitMode !== 'cover') {
-        this.player.f.style.width = '';
-        this.player.f.style.height = '';
+        this.player.getIframe().style.width = '';
+        this.player.getIframe().style.height = '';
         return false;
       }
 
-      var containerWidth = this.player.f.parentNode.clientWidth;
-      var containerHeight = this.player.f.parentNode.clientHeight;
+      var containerWidth = this.player.getIframe().parentNode.clientWidth;
+      var containerHeight = this.player.getIframe().parentNode.clientHeight;
       var containerRatio = containerWidth / containerHeight;
       var videoRatio = this.player.h.f.width / this.player.h.f.height;
       if (containerRatio > videoRatio) {
         // at the same width, the video is taller than the window
-        this.player.f.style.width = containerWidth * this.scaleFactor + 'px';
-        this.player.f.style.height = containerWidth * this.scaleFactor / videoRatio + 'px';
+        this.player.getIframe().style.width = containerWidth * this.scaleFactor + 'px';
+        this.player.getIframe().style.height = containerWidth * this.scaleFactor / videoRatio + 'px';
       } else if (videoRatio > containerRatio) {
         // at the same width, the video is shorter than the window
-        this.player.f.style.width = containerHeight * this.scaleFactor * videoRatio + 'px';
-        this.player.f.style.height = containerHeight * this.scaleFactor + 'px';
+        this.player.getIframe().style.width = containerHeight * this.scaleFactor * videoRatio + 'px';
+        this.player.getIframe().style.height = containerHeight * this.scaleFactor + 'px';
       } else {
         // the window and video ratios match
-        this.player.f.style.width = containerWidth * this.scaleFactor + 'px';
-        this.player.f.style.height = containerHeight * this.scaleFactor + 'px';
+        this.player.getIframe().style.width = containerWidth * this.scaleFactor + 'px';
+        this.player.getIframe().style.height = containerHeight * this.scaleFactor + 'px';
       }
     }
   }, {
