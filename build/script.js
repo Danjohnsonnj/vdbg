@@ -500,7 +500,7 @@ var VDBG = function () {
 
       this.player.getIframe().classList.add('background-video');
       if (this.isMobileSafari) {
-        body.classList.add('mobile');
+        document.body.classList.add('mobile');
       };
       this.scaleVideo();
       this.setSpeed();
