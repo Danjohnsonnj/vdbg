@@ -223,6 +223,8 @@ document.body.querySelector('.sample-text').addEventListener('mousedown', functi
 },{"./videobackground.js":2}],2:[function(require,module,exports){
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -548,7 +550,9 @@ var VDBG = function () {
       var containerWidth = this.player.getIframe().parentNode.clientWidth;
       var containerHeight = this.player.getIframe().parentNode.clientHeight;
       var containerRatio = containerWidth / containerHeight;
-      var videoRatio = this.player.h.f.width / this.player.h.f.height;
+      var videoDimensions = this._findPlayerDimensions();
+
+      var videoRatio = videoDimensions.width / videoDimensions.height;
       if (containerRatio > videoRatio) {
         // at the same width, the video is taller than the window
         this.player.getIframe().style.width = containerWidth * this.scaleFactor + 'px';
@@ -628,6 +632,35 @@ var VDBG = function () {
           this.scaleVideo();
         }.bind(this));
       }.bind(this), true);
+    }
+  }, {
+    key: '_findPlayerDimensions',
+    value: function _findPlayerDimensions() {
+      var w = 0;
+      var h = 0;
+      var playerObjs = [];
+      for (var k in this.player) {
+        if (_typeof(this.player[k]) === 'object') {
+          playerObjs.push(this.player[k]);
+        }
+      }
+      playerObjs.forEach(function (item, index, array) {
+        for (var k in item) {
+          try {
+            if (_typeof(item[k]) === 'object' && !!item[k].host) {
+              w = item[k].width;
+              h = item[k].height;
+              break;
+            }
+          } catch (err) {
+            // console.error(err);
+          }
+        }
+      });
+      return {
+        'width': w,
+        'height': h
+      };
     }
   }]);
 

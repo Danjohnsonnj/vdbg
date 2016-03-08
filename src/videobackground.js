@@ -287,7 +287,9 @@ class VDBG {
     let containerWidth = this.player.getIframe().parentNode.clientWidth;
     let containerHeight = this.player.getIframe().parentNode.clientHeight;
     let containerRatio = containerWidth / containerHeight;
-    let videoRatio = this.player.h.f.width / this.player.h.f.height;
+    let videoDimensions = this._findPlayerDimensions();
+
+    let videoRatio = videoDimensions.width / videoDimensions.height;
     if (containerRatio > videoRatio) {
       // at the same width, the video is taller than the window
       this.player.getIframe().style.width = (containerWidth * this.scaleFactor) + 'px';
@@ -364,6 +366,35 @@ class VDBG {
      }.bind(this));
    }.bind(this), true);
   }
+
+  _findPlayerDimensions() {
+    let w = 0;
+    let h = 0;
+    let playerObjs = [];
+    for (var k in this.player) {
+      if (typeof this.player[k] === 'object') {
+        playerObjs.push(this.player[k]);
+      }
+    }
+    playerObjs.forEach(function(item, index, array) {
+      for (var k in item) {
+        try {
+          if (typeof item[k] === 'object' && !!item[k].host) {
+            w = item[k].width;
+            h = item[k].height;
+            break;
+          }
+        } catch (err) {
+          // console.error(err);
+        }
+      }
+    });
+    return {
+      'width': w,
+      'height': h
+    };
+  }
+
 }
 
 module.exports = VDBG;
